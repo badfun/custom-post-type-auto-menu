@@ -1,0 +1,75 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Custom Post Type Auto Menu 1.0.0\n"
+"POT-Creation-Date: 2013-08-30 00:33-0500\n"
+"PO-Revision-Date: 2013-08-30 17:10-0500\n"
+"Last-Translator: Ken Dirschl <ken@badfunproductions.com>\n"
+"Language-Team: Bad Fun Productions <ken@badfunproductions.com>\n"
+"Language: English\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e;_n;_x;esc_html_e;"
+"esc_html__;esc_attr_e\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: bfp-cpt-auto-menu.php:243
+msgid ""
+"Your theme does not support custom navigation menus. The plugin requires "
+"themes built for at least WordPress 3.0"
+msgstr ""
+
+#: bfp-cpt-auto-menu.php:270
+msgid ""
+"You do not have any menus setup with your theme. You need to create a menu "
+"to use this plugin."
+msgstr ""
+
+#: bfp-cpt-auto-menu.php:406 bfp-cpt-auto-menu.php:563
+msgid "CPT Auto Menu Settings"
+msgstr ""
+
+#: bfp-cpt-auto-menu.php:413
+msgid "Custom Post Type"
+msgstr ""
+
+#: bfp-cpt-auto-menu.php:424
+msgid "Menu Name"
+msgstr ""
+
+#: bfp-cpt-auto-menu.php:435
+msgid "Parent Menu Item"
+msgstr ""
+
+#: bfp-cpt-auto-menu.php:453
+msgid ""
+"Select the custom post type, the menu, and which parent you would like to "
+"add to."
+msgstr ""
+
+#: bfp-cpt-auto-menu.php:467
+msgid "Select a Custom Post Type"
+msgstr ""
+
+#: bfp-cpt-auto-menu.php:501
+msgid "Select Menu"
+msgstr ""
+
+#: bfp-cpt-auto-menu.php:526
+msgid "Select Menu Item"
+msgstr ""
+
+#: bfp-cpt-auto-menu.php:564
+msgid "CPT Auto Menu"
+msgstr ""
+
+#: bfp-cpt-auto-menu.php:584
+msgid "You do not have sufficient permissions to access this page"
+msgstr ""
+
+#: views/settings.php:10
+msgid "Custom Post Type Auto Menu"
+msgstr ""
