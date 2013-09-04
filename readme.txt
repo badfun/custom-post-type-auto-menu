@@ -8,7 +8,8 @@ Stable tag: 4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Custom Post Type Auto Menu automatically adds new custom post type posts to the chosen menu and parent item as a sub-menu item.
+
+Automatically create menu items for your custom post types in your chosen menu and parent menu item.
 
 == Description ==
 
