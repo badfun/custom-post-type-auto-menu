@@ -3,7 +3,7 @@
 Plugin Name: Custom Post Type Auto Menu
 Plugin URI: https://github.com/badfun/custom-post-type-auto-menu
 Description: Automatically adds new custom post type posts to the chosen menu and parent item as a sub-menu item.
-Version: 1.0
+Version: 1.0.1
 Author: Ken Dirschl, Bad Fun Productions
 Author URI: http://badfunproductions.com
 Author Email: ken@badfunproductions.com
@@ -178,9 +178,9 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
         private function localize_admin_script() {
 
             wp_localize_script( $this->plugin_slug . '-admin-script', 'SelectedMenu', array(
-                'ajaxurl' => admin_url( 'admin-ajax.php' ),
-                'ajaxnonce' => wp_create_nonce( 'ajax-form-nonce' )
-            ));
+                    'ajaxurl' => admin_url( 'admin-ajax.php' ),
+                    'ajaxnonce' => wp_create_nonce( 'ajax-form-nonce' )
+                ));
         }
 
 
@@ -640,16 +640,21 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
             $new_project_title = get_the_title($post->ID);
 
 
-            // make sure title does not exist already and is not an auto-draft
-            if (!in_array($new_project_title, $current_menu_titles) && get_post_status($post->ID) != 'auto-draft') {
+            // make sure title does not exist already and that it is not an auto-draft
+            if (!in_array($new_project_title, $current_menu_titles) && (get_post_status($post->ID) != 'auto-draft')) {
 
                 // make sure the selected custom post type matches
                 if ($this->get_cpt_name() != get_post_type($post->ID)) {
                     return;
                 }
 
-                // if new title then go ahead and add new menu item
-                wp_update_nav_menu_item($this->get_parent_menu_ID(), 0, $itemData);
+                // finally check that we are not adding a draft to the menu
+                // @TODO-bfp: remove menu item if exists for a draft. If user has published, and then makes a draft, menu item is not removed
+                if (get_post_status($post->ID) != 'draft') {
+                    // if new title then go ahead and add new menu item
+                    wp_update_nav_menu_item($this->get_parent_menu_ID(), 0, $itemData);
+                }
+
 
             }
         }

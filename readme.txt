@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: custom post type, menus, auto menu
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: 1.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -35,11 +35,12 @@ Not yet, but maybe in the future.
 
 == Screenshots ==
 
-The settings page. Easy!
+1. The settings page. Easy!
 
 == Changelog ==
 
 = 1.0.0 =
 * First upload of working plugin.
 
-
+= 1.0.1 =
+* Fixed bug where saving draft created menu item
