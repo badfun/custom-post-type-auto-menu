@@ -65,7 +65,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          *
          * @var     string
          */
-        protected $version = '1.0.0';
+        protected $version = '1.0.1';
 
         /**
          * Unique identifier for your plugin.
