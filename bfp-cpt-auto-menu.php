@@ -65,7 +65,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          *
          * @var     string
          */
-        protected $version = '1.0.1';
+        protected $version = '1.1.0';
 
         /**
          * Unique identifier for your plugin.
@@ -102,7 +102,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
             add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
 
             // load ajax handler
-            add_action( 'wp_ajax_admin_script_ajax', array($this, 'admin_script_ajax_handler'));
+            add_action('wp_ajax_admin_script_ajax', array($this, 'admin_script_ajax_handler'));
 
             // register activation
             register_activation_hook(__FILE__, array($this, 'activate'));
@@ -134,7 +134,6 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
         }
 
 
-
         /**
          * Load the plugin text domain for translation.
          *
@@ -148,7 +147,6 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
             load_textdomain($domain, WP_LANG_DIR . '/' . $domain . '/' . $domain . '-' . $locale . '.mo');
             load_plugin_textdomain($domain, FALSE, dirname(plugin_basename(__FILE__)) . '/lang/');
         }
-
 
 
         /**
@@ -166,7 +164,28 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
         }
 
+        /**
+         * Get all custom post types as names and put in an array for later access
+         *
+         * @since 1.1.0
+         *
+         * @return array
+         */
+        private function get_custom_post_type_names() {
+            $args = array(
+                'public' => true,
+                '_builtin' => false
+            );
 
+            // note: $output and $operator are defaults but here for readability
+            $output = 'names';
+            $operator = 'and';
+
+            $custom_post_types = get_post_types($args, $output, $operator);
+
+            return $custom_post_types;
+
+        }
 
 
         /**
@@ -177,12 +196,11 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          */
         private function localize_admin_script() {
 
-            wp_localize_script( $this->plugin_slug . '-admin-script', 'SelectedMenu', array(
-                    'ajaxurl' => admin_url( 'admin-ajax.php' ),
-                    'ajaxnonce' => wp_create_nonce( 'ajax-form-nonce' )
+            wp_localize_script($this->plugin_slug . '-admin-script', 'AjaxSelected', array(
+                    'ajaxurl' => admin_url('admin-ajax.php'),
+                    'ajaxnonce' => wp_create_nonce('ajax-form-nonce')
                 ));
         }
-
 
 
         /**
@@ -196,13 +214,13 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
             if (isset($_POST['selected_menu'])) {
 
                 // verify our nonce
-                if(  ! wp_verify_nonce($_POST['ajaxnonce'], 'ajax-form-nonce')) {
+                if (!wp_verify_nonce($_POST['ajaxnonce'], 'ajax-form-nonce')) {
                     die ('There is an access error');
                 }
 
                 // verify user has permission
-                if( ! current_user_can( 'edit_posts' ) ) {
-                    die ( 'You do not have sufficient permission' );
+                if (!current_user_can('edit_posts')) {
+                    die ('You do not have sufficient permission');
                 }
 
                 $main_menu = wp_get_nav_menu_object($_POST['selected_menu']);
@@ -223,9 +241,23 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                     echo '<option value="' . $menu_item->title . '"' . selected($parent_menu_item['parent_name'], $menu_item->title, false) . '>' . ucfirst($menu_item->title) . '</option>';
                 }
 
+            } elseif (isset($_POST['selected_cpt'])) {
+
+                // verify our nonce
+                if (!wp_verify_nonce($_POST['ajaxnonce'], 'ajax-form-nonce')) {
+                    die ('There is an access error');
+                }
+
+                // verify user has permission
+                if (!current_user_can('edit_posts')) {
+                    die ('You do not have sufficient permission');
+                }
+
+                //@TODO-bfp: From here call a function that loads new settings fields for each of the chosen custom post types.
+                echo 'is working?';
+
             }
         }
-
 
 
         /**
@@ -238,7 +270,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          */
         public function test_for_nav_menu_support() {
 
-            if ( !current_theme_supports( 'menus' ) ) {
+            if (!current_theme_supports('menus')) {
                 $html = '<div class="error"><p>';
                 $html .= __('Your theme does not support custom navigation menus. The plugin requires themes built for at least WordPress 3.0');
                 $html .= '</p></div>';
@@ -389,6 +421,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
         /**
          * Hook into WP's admin_init action hook and add our settings
          * @TODO-bfp: Add settings page to Menu tab instead of in settings
+         * @version 1.1.0
          *
          * @since 1.0.0
          *
@@ -396,18 +429,31 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
         public function admin_init() {
 
             // register the settings
+            register_setting('cpt_auto_menu-group', 'select_cpts');
             register_setting('cpt_auto_menu-group', 'select_cpt');
             register_setting('cpt_auto_menu-group', 'select_menu');
             register_setting('cpt_auto_menu-group', 'select_parent_menu');
 
-            // add settings section
+
+            // main settings section
             add_settings_section(
                 'cpt_auto_menu-section',
                 __('CPT Auto Menu Settings'),
-                array(&$this, 'settings_section_cpt_auto_menu'),
+                array(&$this, 'select_cpt_section'),
                 'cpt_auto_menu'
             );
 
+            // custom post types checkbox menu
+            add_settings_field(
+                'cpt_auto_menu-select_cpts',
+                __('Select Custom Post Types'),
+                array(&$this, 'settings_field_select_cpts'),
+                'cpt_auto_menu',
+                'cpt_auto_menu-section',
+                array()
+            );
+
+            // single cpt field
             add_settings_field(
                 'cpt_auto_menu-select_cpt',
                 __('Custom Post Type'),
@@ -419,6 +465,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                 )
             );
 
+            // menu to associate with cpt
             add_settings_field(
                 'cpt_auto_menu-select_menu',
                 __('Menu Name'),
@@ -430,6 +477,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                 )
             );
 
+            // parent menu item to associate with cpt
             add_settings_field(
                 'cpt_auto_menu-select_parent_menu',
                 __('Parent Menu Item'),
@@ -441,18 +489,38 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                 )
             );
 
+
         }
 
         /**
          * Settings page description
+         * @version 1.1.0
          *
          * @since 1.0.0
          *
          */
-        public function settings_section_cpt_auto_menu() {
-            echo __('Select the custom post type, the menu, and which parent you would like to add to.');
+        public function select_cpt_section() {
+
+            echo __('Select the custom post types for which you would like an automated menu. Then select the menu and parent menu item where it should appear.');
+
         }
 
+        /**
+         * Select which custom post types require auto menu option
+         *
+         * @since 1.1.0
+         */
+        public function settings_field_select_cpts() {
+
+            $html = '<br />';
+
+            // get custom post types and display as checklist
+            foreach ($this->get_custom_post_type_names() as $post_type) {
+                $html .= '<input type="checkbox" class="cpts_list" name="cpt_list[]" value="' . $post_type . '">' . ucfirst($post_type) . '<br />';
+            }
+
+            echo $html;
+        }
 
         /**
          * Get custom post type names and add to Select Custom Post Type Menu
@@ -470,14 +538,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
             $html .= '<option value="default" class="highlight">' . $text . '</option>';
 
             // get a list of all public custom post types
-            $args = array(
-                'public' => true,
-                '_builtin' => false
-            );
-            $output = 'names'; // names or objects, note names is the default
-            $operator = 'and'; // 'and' or 'or'
-            $post_types = get_post_types($args, $output, $operator);
-            foreach ($post_types as $post_type) {
+            foreach ($this->get_custom_post_type_names() as $post_type) {
                 // add post types to option value and capitalise first letter
                 $html .= '<option value="' . $post_type . '"' . selected($cpt_option['cpt_name'], $post_type, false) . ' >' . ucfirst($post_type) . '</option>';
             }
