@@ -8,12 +8,19 @@
 jQuery(document).ready(function($) {
 
     /**
-     * Pass the selected CPT checkbox value through AJAX
+     * Pass the selected CPT's checkbox value through AJAX as an array
      */
-     $('.cpts_list').change(function(){
+     $('input[type="checkbox"]').change(function(){
 
          // get selected cpt
-         var selected_cpt = $('input[type="checkbox"].cpts_list:checked').text();
+         //http://stackoverflow.com/questions/18582810/pass-multiple-checkboxes-to-php-via-ajax
+         //http://stackoverflow.com/questions/12063243/jquery-multiple-checkbox-get-value-in-var-or-print-in-span
+         var selected_cpt = new Array();
+         $( 'input[type="checkbox"].cpts_list:checked' ).each( function() {
+             selected_cpt.push( $( this ).val() );
+         } );
+
+         var valid = false;
 
          // send ajax request
          $.ajax({
@@ -29,7 +36,7 @@ jQuery(document).ready(function($) {
          })
              .done(function(html){
                  // add html info here
-                 $('.cpts_list').html(html);
+                 $('#cpts_list').html(selected_cpt);
 
                  console.log(selected_cpt);
              })

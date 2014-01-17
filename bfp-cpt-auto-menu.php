@@ -204,13 +204,16 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
 
         /**
-         * Receive the selected menu from POST and pass it with ajax
+         * Receive the Ajax data from POST and use it on the page
          * Some good info here: http://www.garyc40.com/2010/03/5-tips-for-using-ajax-in-wordpress/
+         * @version 1.1.0
          *
          * @since 1.0.0
          *
          */
         public function admin_script_ajax_handler() {
+
+            // Menu name determines Parent Menu Item
             if (isset($_POST['selected_menu'])) {
 
                 // verify our nonce
@@ -241,8 +244,9 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                     echo '<option value="' . $menu_item->title . '"' . selected($parent_menu_item['parent_name'], $menu_item->title, false) . '>' . ucfirst($menu_item->title) . '</option>';
                 }
 
-            } elseif (isset($_POST['selected_cpt'])) {
-
+            }
+            // Selected CPT's display individual settings fields for each
+            elseif (isset($_POST['selected_cpt'])) {
                 // verify our nonce
                 if (!wp_verify_nonce($_POST['ajaxnonce'], 'ajax-form-nonce')) {
                     die ('There is an access error');
@@ -253,8 +257,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                     die ('You do not have sufficient permission');
                 }
 
-                //@TODO-bfp: From here call a function that loads new settings fields for each of the chosen custom post types.
-                echo 'is working?';
+               // $selected_cpts=$_POST['selected_cpt'];
 
             }
         }
@@ -427,6 +430,10 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          *
          */
         public function admin_init() {
+            //@TODO-bfp: we need to serialize the settings instead of putting each into a seperate row.
+            //http://wordpress.org/support/topic/how-to-serialize-options-using-settings-api
+            // http://stackoverflow.com/questions/20122867/wordpress-settings-api-and-serialising-data
+            // http://codex.wordpress.org/Function_Reference/wp_load_alloptions
 
             // register the settings
             register_setting('cpt_auto_menu-group', 'select_cpts');
@@ -452,6 +459,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                 'cpt_auto_menu-section',
                 array()
             );
+
 
             // single cpt field
             add_settings_field(
@@ -516,8 +524,11 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
             // get custom post types and display as checklist
             foreach ($this->get_custom_post_type_names() as $post_type) {
-                $html .= '<input type="checkbox" class="cpts_list" name="cpt_list[]" value="' . $post_type . '">' . ucfirst($post_type) . '<br />';
+                $html .= '<input type="checkbox" class="cpts_list" name="cpts_list[]" value="' . $post_type . '">' . ucfirst($post_type) . '<br />';
             }
+
+            $html .= '<div id="cpts_list">';
+            $html .='</div>';
 
             echo $html;
         }
