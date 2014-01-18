@@ -36,7 +36,7 @@ jQuery(document).ready(function($) {
          })
              .done(function(html){
                  // add html info here
-                 $('#cpts_list').html(selected_cpt);
+                 $('#cpts_list').html(html);
 
                  console.log(selected_cpt);
              })

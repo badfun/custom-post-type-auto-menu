@@ -245,7 +245,9 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                 }
 
             }
-            // Selected CPT's display individual settings fields for each
+            /*
+             * Selected CPT's display individual fields for each
+             */
             elseif (isset($_POST['selected_cpt'])) {
                 // verify our nonce
                 if (!wp_verify_nonce($_POST['ajaxnonce'], 'ajax-form-nonce')) {
@@ -257,9 +259,25 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                     die ('You do not have sufficient permission');
                 }
 
-               // $selected_cpts=$_POST['selected_cpt'];
+                $this->test_function();
+
 
             }
+        }
+
+        private function test_function(){
+
+            // run function for each selected
+                $selected_cpts=$_POST['selected_cpt'];
+               foreach ($selected_cpts as $selected_cpt){
+                   $this->settings_field_select_cpt();
+                    $this->settings_field_select_menu();
+                   $this->settings_field_select_parent_menu_item();
+
+                   echo '<br />';
+
+
+               }
         }
 
 
@@ -437,15 +455,15 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
             // register the settings
             register_setting('cpt_auto_menu-group', 'select_cpts');
-            register_setting('cpt_auto_menu-group', 'select_cpt');
-            register_setting('cpt_auto_menu-group', 'select_menu');
-            register_setting('cpt_auto_menu-group', 'select_parent_menu');
+//            register_setting('cpt_auto_menu-group', 'select_cpt');
+//            register_setting('cpt_auto_menu-group', 'select_menu');
+//            register_setting('cpt_auto_menu-group', 'select_parent_menu');
 
 
             // main settings section
             add_settings_section(
                 'cpt_auto_menu-section',
-                __('CPT Auto Menu Settings'),
+                __('CPT Settings'),
                 array(&$this, 'select_cpt_section'),
                 'cpt_auto_menu'
             );
@@ -527,8 +545,8 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                 $html .= '<input type="checkbox" class="cpts_list" name="cpts_list[]" value="' . $post_type . '">' . ucfirst($post_type) . '<br />';
             }
 
-            $html .= '<div id="cpts_list">';
-            $html .='</div>';
+//            $html .= '<div id="cpts_list">';
+//            $html .='</div>';
 
             echo $html;
         }

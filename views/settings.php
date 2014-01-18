@@ -15,6 +15,13 @@
 
         <?php do_settings_sections('cpt_auto_menu'); ?>
 
+        <?php
+        $html = '<div id="cpts_list">';
+        $html .='</div>';
+
+        echo $html;
+        ?>
+
         <?php @submit_button(); ?>
     </form>
 </div>
