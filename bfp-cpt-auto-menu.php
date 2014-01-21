@@ -26,6 +26,11 @@ License:
 
 */
 
+//@TODO-bfp: fix page where options reside
+//@TOD-bfp: redirect to menu settings after cpt settings is saved
+//@TODO-bfp: solve double 'settings saved' error
+//@TODO-bfp: remove all debug code
+
 if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
 
@@ -157,6 +162,9 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          * Register and enqueue admin-specific JavaScript.
          *
          * @since     1.0.0
+         *
+         * @TODO-bfp: Important! use page hook suffix to load our script only on our page:
+         * http://codex.wordpress.org/Function_Reference/wp_enqueue_script#Link_Scripts_Only_on_a_Plugin_Administration_Screen
          *
          */
         public function enqueue_admin_scripts() {
@@ -667,7 +675,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
             //@TODO-bfp: may need to lowercase results
             $menus = get_terms('nav_menu');
 
-            $html = '<select id="" name="cpt_auto_menu_settings[menu_name][]">';
+            $html = '<select class="menu_name" name="cpt_auto_menu_settings[menu_name][]">';
             $html .= '<option value="default" class="highlight">' . $text . '</option>';
 
             // get current option if there is one
@@ -692,7 +700,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
             $text = __('Select Menu Item');
 
-            $html = '<select id="" name="cpt_auto_menu_settings[parent_name][]">';
+            $html = '<select class="parent_name" name="cpt_auto_menu_settings[parent_name][]">';
             $html .= '<option value="default" class="highlight">' . $text . '</option>';
             // new select options are pulled in from selected_menu_name.php
 
@@ -722,21 +730,19 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          * Main function for returning multiple fields based on users CPT selection
          *
          * @since 1.1.0
+         *
          */
         public function settings_field_select_menus() {
             // get saved cpt options
             $selected_cpts = $this->get_selected_cpts();
-
+            // set up an id for our array keys
             $i = 0;
 
-//            // for each selected display our fields
+           // for each selected display our fields
             foreach ($selected_cpts as $selected_cpt) {
 
                 $form = '<input type="hidden" name="cpt_auto_menu_settings[id][]" value="' . $i++ . '">';
                 $form .= '<input type="hidden" name="cpt_auto_menu_settings[cpt][]" value="' . $selected_cpt . '">';
-//                    $form .= '<input type="hidden" name="cpt_auto_menu_settings[menu_name][]" value="' . $selected_cpt . '">';
-//                    $form .= '<input type="hidden" name="cpt_auto_menu_settings[parent_name][]" value="' . $selected_cpt . '">';
-
 
                 echo $selected_cpt;
                 echo $form;
@@ -748,7 +754,6 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                 echo '<br />';
 
             }
-
 
         }
 
@@ -812,7 +817,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
 
 // throw this error for testing
-            $test = $this->run_some_shit();
+//            $test = $this->run_some_shit();
 
             return $output;
 

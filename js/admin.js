@@ -46,12 +46,19 @@ jQuery(document).ready(function($) {
 
     /**
      * Get the value of the Menu Name so we can pass it back to the form to populate the Parent Menu Item menu
+     * http://stackoverflow.com/questions/12750307/jquery-select-change-event-get-selected-option
+     * http://stackoverflow.com/questions/1409918/jquery-get-immediate-next-element-after-the-current-element
      */
     //check for change on the categories menu
-    $('#menu_name').change(function() {
+//    $('.menu_name').change(function() {
+
+        $('select').on('change', function (e){
+
+        var optionSelected = $("option:selected", this);
+        var selected_menu = this.value;
 
         //get category value
-        var selected_menu = $('select#menu_name option:selected').text();
+ //       var selected_menu = $('select.menu_name option:selected').text();
 
         // send ajax request
         $.ajax({
@@ -67,7 +74,7 @@ jQuery(document).ready(function($) {
         })
             .done(function(html) {
                 // add our html info here
-               $('#parent_name').html(html);
+               $(e.target).next().html(html);
 
                console.log(selected_menu);
 
