@@ -3,7 +3,7 @@
 Plugin Name: Custom Post Type Auto Menu
 Plugin URI: https://github.com/badfun/custom-post-type-auto-menu
 Description: Automatically adds new custom post type posts to the chosen menu and parent item as a sub-menu item.
-Version: 1.0.1
+Version: 1.1.0
 Author: Ken Dirschl, Bad Fun Productions
 Author URI: http://badfunproductions.com
 Author Email: ken@badfunproductions.com
@@ -42,6 +42,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          */
         private static $instance = false;
 
+
         /**
          * Instantiate singleton object
          * http://jumping-duck.com/tutorial/wordpress-plugin-structure/
@@ -66,6 +67,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          * @var     string
          */
         protected $version = '1.1.0';
+
 
         /**
          * Unique identifier for your plugin.
@@ -120,6 +122,8 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
         private $parent_menu_item;
         private $parent_menu_item_ID;
         private $cpt_name;
+        private $cpt_list;
+        private $menu_selects;
 
 
         /**
@@ -244,8 +248,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                     echo '<option value="' . $menu_item->title . '"' . selected($parent_menu_item['parent_name'], $menu_item->title, false) . '>' . ucfirst($menu_item->title) . '</option>';
                 }
 
-            }
-            /*
+            } /*
              * Selected CPT's display individual fields for each
              */
             elseif (isset($_POST['selected_cpt'])) {
@@ -259,25 +262,25 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                     die ('You do not have sufficient permission');
                 }
 
-                $this->test_function();
+                //  $this->test_function();
 
 
             }
         }
 
-        private function test_function(){
+        private function test_function() {
 
             // run function for each selected
-                $selected_cpts=$_POST['selected_cpt'];
-               foreach ($selected_cpts as $selected_cpt){
-                   $this->settings_field_select_cpt();
-                    $this->settings_field_select_menu();
-                   $this->settings_field_select_parent_menu_item();
+            $selected_cpts = $_POST['selected_cpt'];
+            foreach ($selected_cpts as $selected_cpt) {
+                $this->settings_field_select_cpt();
+                $this->settings_field_select_menu();
+                $this->settings_field_select_parent_menu_item();
 
-                   echo '<br />';
+                echo '<br />';
 
 
-               }
+            }
         }
 
 
@@ -427,6 +430,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
         /**
          * Get the Custom Post Type selected in Admin settings
+         * @TODO-bfp: this is probably deprecated. double-check
          *
          * @since 1.0.0
          *
@@ -440,86 +444,135 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
 
         /**
-         * Hook into WP's admin_init action hook and add our settings
-         * @TODO-bfp: Add settings page to Menu tab instead of in settings
+         * Get selected custom post types saved in options or create empty array
+         *
+         * @since 1.1.0
+         *
+         * @return array|mixed|void
+         */
+        private function get_selected_cpts() {
+            if (get_option('cpt_auto_menu_cpt_list')) {
+                $this->cpt_list = get_option('cpt_auto_menu_cpt_list');
+            } else {
+                $this->cpt_list = array();
+            }
+
+            return $this->cpt_list;
+        }
+
+
+        private function get_selected_menu() {
+            if (get_option('cpt_auto_menu_settings')) {
+                $this->menu_selects = get_option('cpt_auto_menu_settings');
+            } else {
+                $this->menu_selects = array();
+            }
+        }
+
+
+        /**
+         * Hook into WP's admin_init action hook and add our sections and fields
          * @version 1.1.0
          *
          * @since 1.0.0
          *
          */
         public function admin_init() {
-            //@TODO-bfp: we need to serialize the settings instead of putting each into a seperate row.
-            //http://wordpress.org/support/topic/how-to-serialize-options-using-settings-api
-            // http://stackoverflow.com/questions/20122867/wordpress-settings-api-and-serialising-data
-            // http://codex.wordpress.org/Function_Reference/wp_load_alloptions
 
             // register the settings
-            register_setting('cpt_auto_menu-group', 'select_cpts');
-//            register_setting('cpt_auto_menu-group', 'select_cpt');
-//            register_setting('cpt_auto_menu-group', 'select_menu');
-//            register_setting('cpt_auto_menu-group', 'select_parent_menu');
+            //@TODO-bfp: add sanitization callback to both settings
+            register_setting('select_cpt_settings', 'cpt_auto_menu_cpt_list');
+            register_setting('select_menu_settings', 'cpt_auto_menu_settings', array(&$this, 'menu_settings_validation'));
 
+            /*
+             * Sections
+             */
 
-            // main settings section
+            // Select custom post type(s) section
             add_settings_section(
-                'cpt_auto_menu-section',
-                __('CPT Settings'),
+                'select_cpt_section',
+                __('Custom Post Type Settings'),
                 array(&$this, 'select_cpt_section'),
-                'cpt_auto_menu'
+                'select_cpt_settings'
             );
 
-            // custom post types checkbox menu
+            // Select menu and menu parent item section
+            add_settings_section(
+                'select_menu_section',
+                __('Menu and Parent Menu Item Settings'),
+                array(&$this, 'select_menu_section'),
+                'select_menu_settings'
+            );
+
+            /*
+             * Fields
+             */
+
+            // select custom post types checkbox menu
             add_settings_field(
                 'cpt_auto_menu-select_cpts',
-                __('Select Custom Post Types'),
+                __('Available Custom Post Types'),
                 array(&$this, 'settings_field_select_cpts'),
-                'cpt_auto_menu',
-                'cpt_auto_menu-section',
+                'select_cpt_settings',
+                'select_cpt_section',
+                array()
+            );
+
+
+            // select menu and parent menu item
+            add_settings_field(
+                'cpt_auto_menu-select_menus',
+                __('Select Menu and Parent Menu Item'),
+                array(&$this, 'settings_field_select_menus'),
+                'select_menu_settings',
+                'select_menu_section',
                 array()
             );
 
 
             // single cpt field
-            add_settings_field(
-                'cpt_auto_menu-select_cpt',
-                __('Custom Post Type'),
-                array(&$this, 'settings_field_select_cpt'),
-                'cpt_auto_menu',
-                'cpt_auto_menu-section',
-                array(
-                    'field' => 'select_cpt'
-                )
-            );
+            // @TODO-bfp: remove this after testing
+
+//            add_settings_field(
+//                'cpt_auto_menu-select_cpt',
+//                __('Custom Post Type'),
+//                array(&$this, 'settings_field_select_cpt'),
+//                'select_menu_settings',
+//                'select_menu_section',
+//                array(
+//                    'field' => 'select_cpt'
+//                )
+//            );
 
             // menu to associate with cpt
-            add_settings_field(
-                'cpt_auto_menu-select_menu',
-                __('Menu Name'),
-                array(&$this, 'settings_field_select_menu'),
-                'cpt_auto_menu',
-                'cpt_auto_menu-section',
-                array(
-                    'field' => 'select_menu'
-                )
-            );
-
-            // parent menu item to associate with cpt
-            add_settings_field(
-                'cpt_auto_menu-select_parent_menu',
-                __('Parent Menu Item'),
-                array(&$this, 'settings_field_select_parent_menu_item'),
-                'cpt_auto_menu',
-                'cpt_auto_menu-section',
-                array(
-                    'field' => 'select_parent_menu'
-                )
-            );
+//            add_settings_field(
+//                'cpt_auto_menu-select_menu',
+//                __('Menu Name'),
+//                array(&$this, 'settings_field_select_menu'),
+//                'select_menu_settings',
+//                'select_menu_section',
+//                array(
+//                    'field' => 'select_menu'
+//                )
+//            );
+//
+//            // parent menu item to associate with cpt
+//            add_settings_field(
+//                'cpt_auto_menu-select_parent_menu',
+//                __('Parent Menu Item'),
+//                array(&$this, 'settings_field_select_parent_menu_item'),
+//                'select_menu_settings',
+//                'select_menu_section',
+//                array(
+//                    'field' => 'select_parent_menu'
+//                )
+//            );
 
 
         }
 
         /**
-         * Settings page description
+         * Select CPT section description
          * @version 1.1.0
          *
          * @since 1.0.0
@@ -527,9 +580,22 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          */
         public function select_cpt_section() {
 
-            echo __('Select the custom post types for which you would like an automated menu. Then select the menu and parent menu item where it should appear.');
+            echo __('Select the custom post types for which you would like an automated menu.');
 
         }
+
+
+        /**
+         * Select menu section description
+         *
+         * @since 1.1.0
+         *
+         */
+        public function select_menu_section() {
+
+            echo __('Select the menu and parent menu item for each custom post type');
+        }
+
 
         /**
          * Select which custom post types require auto menu option
@@ -538,44 +604,54 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          */
         public function settings_field_select_cpts() {
 
-            $html = '<br />';
+            $selected_cpts = $this->get_selected_cpts();
 
-            // get custom post types and display as checklist
+            // need to define html variable before foreach loop with concantanation
+            $html = '';
+
+            // get existing custom post types and display as checklist
             foreach ($this->get_custom_post_type_names() as $post_type) {
-                $html .= '<input type="checkbox" class="cpts_list" name="cpts_list[]" value="' . $post_type . '">' . ucfirst($post_type) . '<br />';
-            }
+                // check if cpt exists in get options array
+                if (in_array($post_type, $selected_cpts)) {
 
-//            $html .= '<div id="cpts_list">';
-//            $html .='</div>';
+                    // if yes add checked option
+                    $html .= '<input type="checkbox" class="cpts_list" name="cpt_auto_menu_cpt_list[]" value="' . $post_type . '" checked="checked">' . ucfirst($post_type) . '<br />';
+                } else {
+                    // otherwise display without
+                    $html .= '<input type="checkbox" class="cpts_list" name="cpt_auto_menu_cpt_list[]" value="' . $post_type . '">' . ucfirst($post_type) . '<br />';
+
+                }
+            }
 
             echo $html;
         }
 
-        /**
-         * Get custom post type names and add to Select Custom Post Type Menu
-         *
-         * @since 1.0.0
-         *
-         */
-        public function settings_field_select_cpt() {
-            // get current setting if there is one
-            $cpt_option = get_option('select_cpt');
 
-            $text = __('Select a Custom Post Type');
-
-            $html = '<select id="cpt_name" name="select_cpt[cpt_name]">';
-            $html .= '<option value="default" class="highlight">' . $text . '</option>';
-
-            // get a list of all public custom post types
-            foreach ($this->get_custom_post_type_names() as $post_type) {
-                // add post types to option value and capitalise first letter
-                $html .= '<option value="' . $post_type . '"' . selected($cpt_option['cpt_name'], $post_type, false) . ' >' . ucfirst($post_type) . '</option>';
-            }
-
-            $html .= '</select>';
-
-            echo $html;
-        }
+//        /**
+//         * Get custom post type names and add to Select Custom Post Type Menu
+//         *
+//         * @since 1.0.0
+//         *
+//         */
+//        public function settings_field_select_cpt() {
+//            // get current setting if there is one
+//            $cpt_option = get_option('select_cpt');
+//
+//            $text = __('Select a Custom Post Type');
+//
+//            $html = '<select id="cpt_name" name="select_cpt[cpt_name]">';
+//            $html .= '<option value="default" class="highlight">' . $text . '</option>';
+//
+//            // get a list of all public custom post types
+//            foreach ($this->get_custom_post_type_names() as $post_type) {
+//                // add post types to option value and capitalise first letter
+//                $html .= '<option value="' . $post_type . '"' . selected($cpt_option['cpt_name'], $post_type, false) . ' >' . ucfirst($post_type) . '</option>';
+//            }
+//
+//            $html .= '</select>';
+//
+//            echo $html;
+//        }
 
         /**
          * Get menu names and add to Select Menu
@@ -583,25 +659,26 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          * @since 1.0.0
          *
          */
-        public function settings_field_select_menu() {
-
-            // get current option if there is one
-            $menu_option = get_option('select_menu');
+        private function settings_field_select_menu() {
 
             $text = __('Select Menu');
 
             // get list of menus
+            //@TODO-bfp: may need to lowercase results
             $menus = get_terms('nav_menu');
 
-            $html = '<select id="menu_name" name="select_menu[menu_name]">';
+            $html = '<select id="" name="cpt_auto_menu_settings[menu_name][]">';
             $html .= '<option value="default" class="highlight">' . $text . '</option>';
 
+            // get current option if there is one
+            $menu_option = get_option('cpt_auto_menu_settings[menu_name]');
+
             foreach ($menus as $menu) {
-                $html .= '<option value="' . $menu->name . '"' . selected($menu_option['menu_name'], $menu->name, false) . '>' . ucfirst($menu->name) . '</option>';
+
+                $html .= '<option value="' . $menu->name . '"' . selected($menu_option, $menu->name, false) . '>' . ucfirst($menu->name) . '</option>';
             }
 
             $html .= '</select>';
-
             echo $html;
         }
 
@@ -611,17 +688,17 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          * @since 1.0.0
          *
          */
-        public function settings_field_select_parent_menu_item() {
+        private function settings_field_select_parent_menu_item() {
 
             $text = __('Select Menu Item');
 
-            $html = '<select id="parent_name" name="select_parent_menu[parent_name]">';
+            $html = '<select id="" name="cpt_auto_menu_settings[parent_name][]">';
             $html .= '<option value="default" class="highlight">' . $text . '</option>';
             // new select options are pulled in from selected_menu_name.php
 
             // if options exist in db then show selected option
-            if (get_option('select_parent_menu') != false) {
-                $parent_menu_item = get_option('select_parent_menu');
+            if (get_option('cpt_auto_menu_settings[parent_name]') != false) {
+                $parent_menu_item = get_option('cpt_auto_menu_settings[parent_name]');
 
                 $menu_items = wp_get_nav_menu_items($this->get_parent_menu_ID(), array('post_status' => 'publish'));
 
@@ -630,7 +707,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                     if ($menu_item->menu_item_parent != 0) {
                         continue;
                     }
-                    $html .= '<option value="' . $menu_item->title . '"' . selected($parent_menu_item['parent_name'], $menu_item->title, false) . '>' . ucfirst($menu_item->title) . '</option>';
+                    $html .= '<option value="' . $menu_item->title . '"' . selected($parent_menu_item, $menu_item->title, false) . '>' . ucfirst($menu_item->title) . '</option>';
                 }
 
             }
@@ -642,10 +719,111 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
 
         /**
-         * Add a menu
+         * Main function for returning multiple fields based on users CPT selection
+         *
+         * @since 1.1.0
+         */
+        public function settings_field_select_menus() {
+            // get saved cpt options
+            $selected_cpts = $this->get_selected_cpts();
+
+            $i = 0;
+
+//            // for each selected display our fields
+            foreach ($selected_cpts as $selected_cpt) {
+
+                $form = '<input type="hidden" name="cpt_auto_menu_settings[id][]" value="' . $i++ . '">';
+                $form .= '<input type="hidden" name="cpt_auto_menu_settings[cpt][]" value="' . $selected_cpt . '">';
+//                    $form .= '<input type="hidden" name="cpt_auto_menu_settings[menu_name][]" value="' . $selected_cpt . '">';
+//                    $form .= '<input type="hidden" name="cpt_auto_menu_settings[parent_name][]" value="' . $selected_cpt . '">';
+
+
+                echo $selected_cpt;
+                echo $form;
+
+
+                echo $this->settings_field_select_menu();
+                echo $this->settings_field_select_parent_menu_item();
+
+                echo '<br />';
+
+            }
+
+
+        }
+
+
+        /**
+         * Callback to merge the fields arrays and sanitize the inputs
+         * http://stackoverflow.com/questions/6553752/array-combine-three-or-more-arrays-with-php
+         *
+         * @since 1.1.0
+         *
+         * @param $input
+         * @return array
+         */
+        public function menu_settings_validation($input) {
+
+            // testing only
+            print_r($input);
+            echo '<br />';
+
+            $cpt_array = $input['cpt'];
+
+            print_r($cpt_array);
+            echo '<br />';
+
+            $menu_name_array = $input['menu_name'];
+
+            print_r($menu_name_array);
+            echo '<br />';
+
+            $parent_name_array = $input['parent_name'];
+
+            print_r($parent_name_array);
+            echo '<br />';
+
+
+            // begin here
+            $keys = $input['id'];
+
+            $cpt_array = $input['cpt'];
+
+            $menu_name_array = $input['menu_name'];
+
+            $parent_name_array = $input['parent_name'];
+
+            $output = array();
+
+            foreach ($keys as $id => $key) {
+                $output[$key] = array(
+                    'cpt' => $cpt_array[$id],
+                    'menu_name' => $menu_name_array[$id],
+                    'parent_menu' => $parent_name_array[$id]
+                );
+            }
+
+            foreach( $output as $key => $value) {
+                echo $key; // array indexes
+                echo $value['cpt'] . '<br />'; // data
+                echo $value['menu_name']. '<br />';
+                echo $value['parent_menu']. '<br />';
+            }
+
+
+// throw this error for testing
+            $test = $this->run_some_shit();
+
+            return $output;
+
+        }
+
+
+        /**
+         * Add a menu to Settings
          *
          * @since 1.0.0
-         *
+         * @TODO-bfp: possibly make this part of the Appearence/Menus
          */
         public function add_menu() {
 

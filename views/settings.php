@@ -1,7 +1,12 @@
 <?php
 /**
  * The settings page view in Admin
- * http://www.yaconiello.com/blog/how-to-handle-wordpress-settings
+ * http://wp.tutsplus.com/tutorials/theme-development/the-complete-guide-to-the-wordpress-settings-api-part-5-tabbed-navigation-for-your-settings-page/
+ * http://wordpress.stackexchange.com/questions/127493/wordpress-settings-api-implementing-tabs-on-custom-menu-page
+ *
+ * @version 1.1.0
+ *
+ * @since 1.0.0
  */
 ?>
 <div class="wrap">
@@ -9,17 +14,49 @@
 
     <h2><?php echo __('Custom Post Type Auto Menu'); ?></h2>
 
-    <form method="post" action="options.php">
+    <?php settings_errors(); ?>
 
-        <?php @settings_fields('cpt_auto_menu-group'); ?>
+    <?php
+    $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'cpt_auto_menu_select_cpt';
+    ?>
 
-        <?php do_settings_sections('cpt_auto_menu'); ?>
+    <h2 class="nav-tab-wrapper">
+        <a href="?page=cpt_auto_menu&tab=select_cpt"
+           class="nav-tab <?php echo $active_tab == 'select_cpt' ? 'nav-tab-active' : ''; ?>">CPT Settings</a>
 
         <?php
-        $html = '<div id="cpts_list">';
-        $html .='</div>';
+        // if custom post type has been chosen display menu tab
+        if (get_option('cpt_auto_menu_cpt_list')) {
+            ?>
 
-        echo $html;
+            <a href="?page=cpt_auto_menu&tab=select_menu"
+               class="nav-tab <?php echo $active_tab == 'select_menu' ? 'nav-tab-active' : ''; ?>">Menu Settings</a>
+
+        <?php } ?>
+    </h2>
+
+    <form method="post" action="options.php">
+
+        <?php
+        if ($active_tab == 'select_cpt') {
+            settings_fields('select_cpt_settings');
+            do_settings_sections('select_cpt_settings');
+        } else if ($active_tab == 'select_menu') {
+
+            $selected_cpts = get_option('cpt_auto_menu_cpt_list');
+
+            print_r($selected_cpts);
+
+            echo '<br />';
+            $selected_menus = get_option('cpt_auto_menu_settings');
+            print_r($selected_menus);
+
+
+              settings_fields('select_menu_settings');
+              do_settings_sections('select_menu_settings');
+
+
+        }
         ?>
 
         <?php @submit_button(); ?>

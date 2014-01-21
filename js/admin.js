@@ -69,7 +69,7 @@ jQuery(document).ready(function($) {
                 // add our html info here
                $('#parent_name').html(html);
 
-               // console.log(selected_menu);
+               console.log(selected_menu);
 
             })
 
