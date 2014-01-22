@@ -43,6 +43,8 @@
             do_settings_sections('select_cpt_settings');
         } else if ($active_tab == 'select_menu') {
 
+
+            // testing shit ++++++++++++++++++++++++++++++
             $selected_cpts = get_option('cpt_auto_menu_cpt_list');
 
             print_r($selected_cpts);
@@ -51,6 +53,16 @@
             $selected_menus = get_option('cpt_auto_menu_settings');
             print_r($selected_menus);
 
+            echo '<br />';
+            print_r ($this->get_cpt_settings('project'));
+            echo '<br />';
+            $menu = $this->get_cpt_settings('project');
+            echo $menu['menu_name'];
+            echo '<br />';
+            echo $menu['parent_menu'];
+
+
+            // end testing shit ++++++++++++++++++++++++++++++
 
               settings_fields('select_menu_settings');
               do_settings_sections('select_menu_settings');

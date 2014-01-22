@@ -89,6 +89,9 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
         /**
          * Constructor. Load action hooks here.
+         * @version 1.1.0
+         *
+         * @since 1.0.0
          */
         private function __construct() {
             // load text domain for internationalization
@@ -103,10 +106,9 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
             // load admin settings actions
             add_action('admin_init', array(&$this, 'admin_init'));
-            add_action('admin_menu', array(&$this, 'add_menu'));
 
-            // Load admin style sheet and JavaScript.
-            add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
+            // create an admin page and prepare enqueue our scripts
+            add_action('admin_menu', array(&$this, 'add_admin_menu_page'));
 
             // load ajax handler
             add_action('wp_ajax_admin_script_ajax', array($this, 'admin_script_ajax_handler'));
@@ -119,6 +121,9 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
         /**
          * Properties
+         * @version 1.1.0
+         *
+         * @since 1.0.0
          *
          * @var string
          */
@@ -126,19 +131,22 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
         private $parent_menu_ID;
         private $parent_menu_item;
         private $parent_menu_item_ID;
-        private $cpt_name;
+        private $current_cpt;
         private $cpt_list;
         private $menu_selects;
 
 
         /**
          * Activation
+         * @version 1.1.0
+         *
+         * @since 1.0.0
          */
         static function activate() {
             //@TODO-bfp: this redirect not working
             // Redirect to settings page if not activating multiple plugins at once
             if (!isset($_GET['activate-multi'])) {
-                wp_redirect(admin_url('options-general.php?page=cpt_auto_menu'));
+                wp_redirect(admin_url('admin.php?page=cpt_auto_menu'));
             }
         }
 
@@ -159,43 +167,52 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
 
         /**
+         * Add admin menu page and load admin js action to load script only on our page
+         * http://wordpress.stackexchange.com/questions/41207/how-do-i-enqueue-styles-scripts-on-certain-wp-admin-pages#76420
+         * dashicons requires version 3.8: http://melchoyce.github.io/dashicons/
+         *
+         * @since 1.1.0
+         *
+         */
+        public function add_admin_menu_page() {
+            $main_page = add_menu_page(
+
+                __('CPT Auto Menu Settings'),
+                __('CPT Auto Menu'),
+                'manage_options',
+                'cpt_auto_menu',
+                array(&$this, 'plugin_settings_page'),
+                'dashicons-screenoptions'
+
+            );
+
+            add_action('load-' . $main_page, array($this, 'load_admin_js'));
+        }
+
+
+        /**
+         * Prepare our js to be loaded into the queue after add admin menu page has been called
+         * http://wordpress.stackexchange.com/questions/41207/how-do-i-enqueue-styles-scripts-on-certain-wp-admin-pages#76420
+         *
+         * @since 1.1.0
+         */
+        public function load_admin_js() {
+            add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_js'));
+        }
+
+
+        /**
          * Register and enqueue admin-specific JavaScript.
          *
          * @since     1.0.0
          *
-         * @TODO-bfp: Important! use page hook suffix to load our script only on our page:
-         * http://codex.wordpress.org/Function_Reference/wp_enqueue_script#Link_Scripts_Only_on_a_Plugin_Administration_Screen
-         *
          */
-        public function enqueue_admin_scripts() {
+        public function enqueue_admin_js() {
 
             wp_enqueue_script($this->plugin_slug . '-admin-script', plugins_url('js/admin.js', __FILE__), array('jquery'), $this->version);
 
             // wp_localize_script added to same action hook
             $this->localize_admin_script();
-
-        }
-
-        /**
-         * Get all custom post types as names and put in an array for later access
-         *
-         * @since 1.1.0
-         *
-         * @return array
-         */
-        private function get_custom_post_type_names() {
-            $args = array(
-                'public' => true,
-                '_builtin' => false
-            );
-
-            // note: $output and $operator are defaults but here for readability
-            $output = 'names';
-            $operator = 'and';
-
-            $custom_post_types = get_post_types($args, $output, $operator);
-
-            return $custom_post_types;
 
         }
 
@@ -212,83 +229,6 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                     'ajaxurl' => admin_url('admin-ajax.php'),
                     'ajaxnonce' => wp_create_nonce('ajax-form-nonce')
                 ));
-        }
-
-
-        /**
-         * Receive the Ajax data from POST and use it on the page
-         * Some good info here: http://www.garyc40.com/2010/03/5-tips-for-using-ajax-in-wordpress/
-         * @version 1.1.0
-         *
-         * @since 1.0.0
-         *
-         */
-        public function admin_script_ajax_handler() {
-
-            // Menu name determines Parent Menu Item
-            if (isset($_POST['selected_menu'])) {
-
-                // verify our nonce
-                if (!wp_verify_nonce($_POST['ajaxnonce'], 'ajax-form-nonce')) {
-                    die ('There is an access error');
-                }
-
-                // verify user has permission
-                if (!current_user_can('edit_posts')) {
-                    die ('You do not have sufficient permission');
-                }
-
-                $main_menu = wp_get_nav_menu_object($_POST['selected_menu']);
-
-                // then extract the ID
-                $parent_menu_ID = (int)$main_menu->term_id;
-
-                // get option if one exists
-                $parent_menu_item = get_option('select_parent_menu');
-
-                $menu_items = wp_get_nav_menu_items($parent_menu_ID, array('post_status' => 'publish'));
-
-                foreach ($menu_items as $menu_item) {
-                    // only display items in the root menu
-                    if ($menu_item->menu_item_parent != 0) {
-                        continue;
-                    }
-                    echo '<option value="' . $menu_item->title . '"' . selected($parent_menu_item['parent_name'], $menu_item->title, false) . '>' . ucfirst($menu_item->title) . '</option>';
-                }
-
-            } /*
-             * Selected CPT's display individual fields for each
-             */
-            elseif (isset($_POST['selected_cpt'])) {
-                // verify our nonce
-                if (!wp_verify_nonce($_POST['ajaxnonce'], 'ajax-form-nonce')) {
-                    die ('There is an access error');
-                }
-
-                // verify user has permission
-                if (!current_user_can('edit_posts')) {
-                    die ('You do not have sufficient permission');
-                }
-
-                //  $this->test_function();
-
-
-            }
-        }
-
-        private function test_function() {
-
-            // run function for each selected
-            $selected_cpts = $_POST['selected_cpt'];
-            foreach ($selected_cpts as $selected_cpt) {
-                $this->settings_field_select_cpt();
-                $this->settings_field_select_menu();
-                $this->settings_field_select_parent_menu_item();
-
-                echo '<br />';
-
-
-            }
         }
 
 
@@ -346,20 +286,137 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
 
         /**
-         * Get the selected menu name from Admin settings
+         * Receive the Ajax data from POST and use it on the page
+         * Some good info here: http://www.garyc40.com/2010/03/5-tips-for-using-ajax-in-wordpress/
+         * @version 1.1.0
+         *
+         * @since 1.0.0
+         *
+         */
+        public function admin_script_ajax_handler() {
+
+            // Menu name determines Parent Menu Item
+            if (isset($_POST['selected_menu'])) {
+
+                // verify our nonce
+                if (!wp_verify_nonce($_POST['ajaxnonce'], 'ajax-form-nonce')) {
+                    die ('There is an access error');
+                }
+
+                // verify user has permission
+                if (!current_user_can('edit_posts')) {
+                    die ('You do not have sufficient permission');
+                }
+
+                $main_menu = wp_get_nav_menu_object($_POST['selected_menu']);
+
+                // then extract the ID
+                $parent_menu_ID = (int)$main_menu->term_id;
+
+                // get option if one exists
+                $parent_menu_item = get_option('select_parent_menu');
+
+                $menu_items = wp_get_nav_menu_items($parent_menu_ID, array('post_status' => 'publish'));
+
+                foreach ($menu_items as $menu_item) {
+                    // only display items in the root menu
+                    if ($menu_item->menu_item_parent != 0) {
+                        continue;
+                    }
+                    echo '<option value="' . $menu_item->title . '"' . selected($parent_menu_item['parent_name'], $menu_item->title, false) . '>' . ucfirst($menu_item->title) . '</option>';
+                }
+
+            }
+        }
+
+
+        /**
+         * Get all custom post types as names and put in an array for later access
+         *
+         * @since 1.1.0
+         *
+         * @return array
+         */
+        private function get_custom_post_type_names() {
+            $args = array(
+                'public' => true,
+                '_builtin' => false
+            );
+
+            // note: $output and $operator are defaults but here for readability
+            $output = 'names';
+            $operator = 'and';
+
+            $custom_post_types = get_post_types($args, $output, $operator);
+
+            return $custom_post_types;
+
+        }
+
+
+        /**
+         * Get the settings for the custom post type saved in options
+         * http://stackoverflow.com/questions/8102221/php-multidimensional-array-searching-find-key-by-specific-value
+         *
+         * @param $cpt
+         * @return mixed
+         */
+        private function get_cpt_settings($cpt){
+            // get all the settings so we only have to make a single call
+            $settings = get_option('cpt_auto_menu_settings');
+
+            // loop through the main array for each sub array
+            foreach ($settings as $setting){
+                // loop through sub array
+                foreach ($setting as $key => $value) {
+
+                    if ($value === $cpt) {
+                        return $setting;
+                        break;
+                    }
+
+                }
+
+            }
+        }
+
+        /**
+         * Get the Custom Post Type for the current post in a single call
+         *
+         * @since 1.1.0
+         *
+         * @return bool|string
+         */
+        private function get_current_cpt() {
+
+            // get the current custom post type
+            $this->current_cpt = get_post_type();
+
+            return $this->current_cpt;
+        }
+
+        /**
+         * Get the selected menu name matched with current cpt
+         *
+         * @version 1.1.0
          *
          * @since 1.0.0
          *
          * @return mixed
          */
         private function get_parent_menu_name() {
+            // get current cpt
+            $cpt = $this->get_current_cpt();
+            // get the settings array for this cpt
+            $settings = $this->get_cpt_settings($cpt);
+
 
             // first make sure that a menu has been selected
-            if (get_option('select_menu') != false) {
+            if ($settings['menu_name'] != false) {
 
-                $this->parent_menu = get_option('select_menu');
+                $this->parent_menu = $settings['menu_name'];
 
-                return $this->parent_menu['menu_name'];
+                return $this->parent_menu;
 
             }
 
@@ -389,16 +446,22 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
 
         /**
-         * Get the selected parent menu item name from the Admin settings
+         * Get the selected parent menu item name matched with current cpt
+         * @version 1.1.0
          *
          * @since 1.0.0
          *
          * @return mixed
          */
         private function get_parent_menu_item() {
-            $this->parent_menu_item = get_option('select_parent_menu');
+            // get current cpt
+            $cpt = $this->get_current_cpt();
+            // get the settings array for this cpt
+            $settings = $this->get_cpt_settings($cpt);
 
-            return $this->parent_menu_item['parent_name'];
+            $this->parent_menu_item = $settings['parent_menu'];
+
+            return $this->parent_menu_item;
         }
 
 
@@ -436,19 +499,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
         }
 
 
-        /**
-         * Get the Custom Post Type selected in Admin settings
-         * @TODO-bfp: this is probably deprecated. double-check
-         *
-         * @since 1.0.0
-         *
-         * @return mixed
-         */
-        private function get_cpt_name() {
-            $this->cpt_name = get_option('select_cpt');
 
-            return $this->cpt_name['cpt_name'];
-        }
 
 
         /**
@@ -537,47 +588,8 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                 array()
             );
 
-
-            // single cpt field
-            // @TODO-bfp: remove this after testing
-
-//            add_settings_field(
-//                'cpt_auto_menu-select_cpt',
-//                __('Custom Post Type'),
-//                array(&$this, 'settings_field_select_cpt'),
-//                'select_menu_settings',
-//                'select_menu_section',
-//                array(
-//                    'field' => 'select_cpt'
-//                )
-//            );
-
-            // menu to associate with cpt
-//            add_settings_field(
-//                'cpt_auto_menu-select_menu',
-//                __('Menu Name'),
-//                array(&$this, 'settings_field_select_menu'),
-//                'select_menu_settings',
-//                'select_menu_section',
-//                array(
-//                    'field' => 'select_menu'
-//                )
-//            );
-//
-//            // parent menu item to associate with cpt
-//            add_settings_field(
-//                'cpt_auto_menu-select_parent_menu',
-//                __('Parent Menu Item'),
-//                array(&$this, 'settings_field_select_parent_menu_item'),
-//                'select_menu_settings',
-//                'select_menu_section',
-//                array(
-//                    'field' => 'select_parent_menu'
-//                )
-//            );
-
-
         }
+
 
         /**
          * Select CPT section description
@@ -738,13 +750,13 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
             // set up an id for our array keys
             $i = 0;
 
-           // for each selected display our fields
+            // for each selected display our fields
             foreach ($selected_cpts as $selected_cpt) {
 
                 $form = '<input type="hidden" name="cpt_auto_menu_settings[id][]" value="' . $i++ . '">';
                 $form .= '<input type="hidden" name="cpt_auto_menu_settings[cpt][]" value="' . $selected_cpt . '">';
 
-                echo $selected_cpt;
+                echo '<span>' . $selected_cpt . '</span>';
                 echo $form;
 
 
@@ -808,12 +820,35 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                 );
             }
 
-            foreach( $output as $key => $value) {
-                echo $key; // array indexes
-                echo $value['cpt'] . '<br />'; // data
-                echo $value['menu_name']. '<br />';
-                echo $value['parent_menu']. '<br />';
-            }
+//            foreach( $output as $key => $value) {
+//                echo $key; // array indexes
+//                echo $value['cpt'] . '<br />'; // data
+//                echo $value['menu_name']. '<br />';
+//                echo $value['parent_menu']. '<br />';
+//            }
+
+
+
+
+//            echo '<br />';
+//
+//            $settings = get_option('cpt_auto_menu_settings');
+//
+//            $cpt = 'project';
+//
+//            print_r($settings);
+//            echo '<br />';
+//            echo $cpt . '<br />';
+//
+//            echo '<br />';
+//
+//            foreach($settings as $key => $value)
+//            {
+//                if ( $value['cpt'] === $cpt )
+//                    echo $key;
+//            }
+//            return false;
+
 
 
 // throw this error for testing
@@ -830,17 +865,17 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          * @since 1.0.0
          * @TODO-bfp: possibly make this part of the Appearence/Menus
          */
-        public function add_menu() {
-
-            add_options_page(
-                __('CPT Auto Menu Settings'),
-                __('CPT Auto Menu'),
-                'manage_options',
-                'cpt_auto_menu',
-                array(&$this, 'plugin_settings_page')
-            );
-
-        }
+//        public function add_menu() {
+//
+//            add_options_page(
+//                __('CPT Auto Menu Settings'),
+//                __('CPT Auto Menu'),
+//                'manage_options',
+//                'cpt_auto_menu',
+//                array(&$this, 'plugin_settings_page')
+//            );
+//
+//        }
 
 
         /**
@@ -884,7 +919,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                 'menu-item-object-id' => $post->ID,
                 'menu-item-parent-id' => $this->get_parent_menu_item_ID(),
                 'menu-item-position' => 0,
-                'menu-item-object' => $this->get_cpt_name(),
+                'menu-item-object' => $this->get_current_cpt(),
                 'menu-item-type' => 'post_type',
                 'menu-item-status' => 'publish'
             );
@@ -917,7 +952,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
             if (!in_array($new_project_title, $current_menu_titles) && (get_post_status($post->ID) != 'auto-draft')) {
 
                 // make sure the selected custom post type matches
-                if ($this->get_cpt_name() != get_post_type($post->ID)) {
+                if ($this->get_current_cpt() != get_post_type($post->ID)) {
                     return;
                 }
 
