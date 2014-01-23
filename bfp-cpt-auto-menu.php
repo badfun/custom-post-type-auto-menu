@@ -133,7 +133,8 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
         private $parent_menu_item_ID;
         private $current_cpt;
         private $cpt_list;
-        private $menu_selects;
+//        private $menu_selects;
+        private $settings;
 
 
         /**
@@ -355,30 +356,37 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
 
         /**
-         * Get the settings for the custom post type saved in options
+         * Get the settings for the CPT's saved in options. This way it is a single call to database
          * http://stackoverflow.com/questions/8102221/php-multidimensional-array-searching-find-key-by-specific-value
          *
          * @param $cpt
          * @return mixed
          */
-        private function get_cpt_settings($cpt){
-            // get all the settings so we only have to make a single call
-            $settings = get_option('cpt_auto_menu_settings');
+        private function get_cpt_settings($cpt) {
+            // make sure settings exist
+            if (get_option('cpt_auto_menu_settings')) {
 
-            // loop through the main array for each sub array
-            foreach ($settings as $setting){
-                // loop through sub array
-                foreach ($setting as $key => $value) {
+                $settings = get_option('cpt_auto_menu_settings');
 
-                    if ($value === $cpt) {
-                        return $setting;
-                        break;
+                // loop through the main array for each sub array
+                foreach ($settings as $setting) {
+                    // loop through sub array
+                    foreach ($setting as $key => $value) {
+
+                        if ($value === $cpt) {
+                            return $setting;
+                            break;
+                        }
+
                     }
 
                 }
 
             }
+
         }
+
+
 
         /**
          * Get the Custom Post Type for the current post in a single call
@@ -386,6 +394,8 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          * @since 1.1.0
          *
          * @return bool|string
+         *
+         * @TODO-bfp: make sure this only happens when not on our page (although it should return false)
          */
         private function get_current_cpt() {
 
@@ -394,6 +404,8 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
             return $this->current_cpt;
         }
+
+
 
         /**
          * Get the selected menu name matched with current cpt
@@ -405,20 +417,30 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          * @return mixed
          */
         private function get_parent_menu_name() {
-            // get current cpt
-            $cpt = $this->get_current_cpt();
-            // get the settings array for this cpt
-            $settings = $this->get_cpt_settings($cpt);
+            $selected_cpts = $this->get_selected_cpts();
 
+            // for each selected cpt get cpt settings
+            foreach ($selected_cpts as $selected_cpt) {
 
-            // first make sure that a menu has been selected
-            if ($settings['menu_name'] != false) {
+                // get the settings array for this cpt
+                $settings = $this->get_cpt_settings($selected_cpt);
+
+//                echo '<pre>';
+//                echo $settings['menu_name'];
+//                echo '</pre>';
+
+                if ( ! $settings['menu_name']) {
+                    return;
+                }
 
                 $this->parent_menu = $settings['menu_name'];
+
+
 
                 return $this->parent_menu;
 
             }
+
 
         }
 
@@ -499,9 +521,6 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
         }
 
 
-
-
-
         /**
          * Get selected custom post types saved in options or create empty array
          *
@@ -519,14 +538,6 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
             return $this->cpt_list;
         }
 
-
-        private function get_selected_menu() {
-            if (get_option('cpt_auto_menu_settings')) {
-                $this->menu_selects = get_option('cpt_auto_menu_settings');
-            } else {
-                $this->menu_selects = array();
-            }
-        }
 
 
         /**
@@ -691,11 +702,11 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
             $html .= '<option value="default" class="highlight">' . $text . '</option>';
 
             // get current option if there is one
-            $menu_option = get_option('cpt_auto_menu_settings[menu_name]');
+//            $menu_option = $settings['menu_name']);
 
             foreach ($menus as $menu) {
 
-                $html .= '<option value="' . $menu->name . '"' . selected($menu_option, $menu->name, false) . '>' . ucfirst($menu->name) . '</option>';
+                $html .= '<option value="' . $menu->name . '"' . selected($this->settings['menu_name'], $menu->name, false) . '>' . ucfirst($menu->name) . '</option>';
             }
 
             $html .= '</select>';
@@ -714,11 +725,23 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
             $html = '<select class="parent_name" name="cpt_auto_menu_settings[parent_name][]">';
             $html .= '<option value="default" class="highlight">' . $text . '</option>';
-            // new select options are pulled in from selected_menu_name.php
 
             // if options exist in db then show selected option
-            if (get_option('cpt_auto_menu_settings[parent_name]') != false) {
-                $parent_menu_item = get_option('cpt_auto_menu_settings[parent_name]');
+            if ($this->settings['parent_menu'] != false) {
+
+//                echo '<pre>';
+//                echo $this->settings['menu_name'];
+//                echo '</pre>';
+
+//                $menu_names[] = $this->settings['menu_name'];
+//
+//                echo '<pre>';
+//                echo $menu_names;
+//                echo '</pre>';
+
+//                foreach($menu_names as $menu){
+//
+//                }
 
                 $menu_items = wp_get_nav_menu_items($this->get_parent_menu_ID(), array('post_status' => 'publish'));
 
@@ -727,8 +750,10 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                     if ($menu_item->menu_item_parent != 0) {
                         continue;
                     }
-                    $html .= '<option value="' . $menu_item->title . '"' . selected($parent_menu_item, $menu_item->title, false) . '>' . ucfirst($menu_item->title) . '</option>';
+                    $html .= '<option value="' . $menu_item->title . '"' . selected($this->settings['parent_menu'], $menu_item->title, false) . '>' . ucfirst($menu_item->title) . '</option>';
                 }
+
+
 
             }
 
@@ -750,8 +775,11 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
             // set up an id for our array keys
             $i = 0;
 
-            // for each selected display our fields
+            // for each cpt selected display our fields
             foreach ($selected_cpts as $selected_cpt) {
+
+                // get settings array for each cpt and pass into a reusable variable
+                $this->settings = $this->get_cpt_settings($selected_cpt);
 
                 $form = '<input type="hidden" name="cpt_auto_menu_settings[id][]" value="' . $i++ . '">';
                 $form .= '<input type="hidden" name="cpt_auto_menu_settings[cpt][]" value="' . $selected_cpt . '">';
@@ -765,7 +793,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
                 echo '<br />';
 
-            }
+             }
 
         }
 
@@ -828,8 +856,6 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 //            }
 
 
-
-
 //            echo '<br />';
 //
 //            $settings = get_option('cpt_auto_menu_settings');
@@ -849,6 +875,42 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 //            }
 //            return false;
 
+
+
+
+
+
+//                    echo '<pre>';
+//                    echo $key;
+//                    echo '</pre>';
+//
+//                    echo '<pre>';
+//                    echo $value;
+//                    echo '</pre>';
+//
+//                    if($key === 'menu_name'){
+//                        echo 'success';
+//                    }
+
+                    // first make sure that a menu has been selected
+//                    if ($value['menu_name'] != false) {
+//
+////                        foreach($key['menu_name'] as $menu_name) {
+////                            echo $menu_name;
+////                        }
+//
+//                        echo $value['menu_name'];
+//
+//                        $this->parent_menu = $key['menu_name'];
+//
+////                        echo $this->parent_menu;
+//
+//
+//                    }
+
+//                }
+//
+//            }
 
 
 // throw this error for testing
