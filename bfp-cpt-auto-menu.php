@@ -116,6 +116,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
             // register activation
             register_activation_hook(__FILE__, array($this, 'activate'));
 
+
         }
 
 
@@ -135,6 +136,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
         private $cpt_list;
 //        private $menu_selects;
         private $settings;
+        private $main_page;
 
 
         /**
@@ -176,7 +178,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          *
          */
         public function add_admin_menu_page() {
-            $main_page = add_menu_page(
+            $this->main_page = add_menu_page(
 
                 __('CPT Auto Menu Settings'),
                 __('CPT Auto Menu'),
@@ -187,7 +189,10 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
             );
 
-            add_action('load-' . $main_page, array($this, 'load_admin_js'));
+            add_action('load-' . $this->main_page, array($this, 'load_admin_js'));
+
+            // test settings redirect (works with bug when no cpt settings @TODO-bfp: remove this after better solution
+            add_action('load-' . $this->main_page, array($this, 'admin_page_redirect'));
         }
 
 
@@ -387,7 +392,6 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
         }
 
 
-
         /**
          * Get the Custom Post Type for the current post in a single call
          *
@@ -404,7 +408,6 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
             return $this->current_cpt;
         }
-
 
 
         /**
@@ -425,16 +428,11 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                 // get the settings array for this cpt
                 $settings = $this->get_cpt_settings($selected_cpt);
 
-//                echo '<pre>';
-//                echo $settings['menu_name'];
-//                echo '</pre>';
-
-                if ( ! $settings['menu_name']) {
+                if (!$settings['menu_name']) {
                     return;
                 }
 
                 $this->parent_menu = $settings['menu_name'];
-
 
 
                 return $this->parent_menu;
@@ -539,7 +537,6 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
         }
 
 
-
         /**
          * Hook into WP's admin_init action hook and add our sections and fields
          * @version 1.1.0
@@ -551,7 +548,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
             // register the settings
             //@TODO-bfp: add sanitization callback to both settings
-            register_setting('select_cpt_settings', 'cpt_auto_menu_cpt_list');
+            register_setting('select_cpt_settings', 'cpt_auto_menu_cpt_list', array(&$this, 'cpt_settings_validation'));
             register_setting('select_menu_settings', 'cpt_auto_menu_settings', array(&$this, 'menu_settings_validation'));
 
             /*
@@ -603,21 +600,38 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
 
         /**
-         * Select CPT section description
+         * Select CPT section callback
          * @version 1.1.0
          *
          * @since 1.0.0
+         *
+         * http://wordpress.stackexchange.com/questions/89251/run-function-on-settings-save
          *
          */
         public function select_cpt_section() {
 
             echo __('Select the custom post types for which you would like an automated menu.');
 
+            // if cpts have been selected then redirect to menu page
+            if ($this->get_selected_cpts()) {
+                // redirect after save
+                $this->cpt_settings_redirect();
+            }
+
+            // otherwise give error message
+            else
+            {
+                $html = '<div class="error"><p>';
+                $html .= __('You need to select at least one Custom Post Type');
+                $html .= '</p></div>';
+                echo $html;
+            }
+
         }
 
 
         /**
-         * Select menu section description
+         * Select menu section callback
          *
          * @since 1.1.0
          *
@@ -658,31 +672,6 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
         }
 
 
-//        /**
-//         * Get custom post type names and add to Select Custom Post Type Menu
-//         *
-//         * @since 1.0.0
-//         *
-//         */
-//        public function settings_field_select_cpt() {
-//            // get current setting if there is one
-//            $cpt_option = get_option('select_cpt');
-//
-//            $text = __('Select a Custom Post Type');
-//
-//            $html = '<select id="cpt_name" name="select_cpt[cpt_name]">';
-//            $html .= '<option value="default" class="highlight">' . $text . '</option>';
-//
-//            // get a list of all public custom post types
-//            foreach ($this->get_custom_post_type_names() as $post_type) {
-//                // add post types to option value and capitalise first letter
-//                $html .= '<option value="' . $post_type . '"' . selected($cpt_option['cpt_name'], $post_type, false) . ' >' . ucfirst($post_type) . '</option>';
-//            }
-//
-//            $html .= '</select>';
-//
-//            echo $html;
-//        }
 
         /**
          * Get menu names and add to Select Menu
@@ -701,17 +690,18 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
             $html = '<select class="menu_name" name="cpt_auto_menu_settings[menu_name][]">';
             $html .= '<option value="default" class="highlight">' . $text . '</option>';
 
-            // get current option if there is one
-//            $menu_option = $settings['menu_name']);
 
             foreach ($menus as $menu) {
 
-                $html .= '<option value="' . $menu->name . '"' . selected($this->settings['menu_name'], $menu->name, false) . '>' . ucfirst($menu->name) . '</option>';
-            }
+                    $html .= '<option value="' . $menu->name . '"' . selected($this->settings['menu_name'], $menu->name, false) . '>' . ucfirst($menu->name) . '</option>';
+                }
+
 
             $html .= '</select>';
             echo $html;
         }
+
+
 
         /**
          * Get menu item names and add to Select Parent Menu Item
@@ -729,21 +719,15 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
             // if options exist in db then show selected option
             if ($this->settings['parent_menu'] != false) {
 
-//                echo '<pre>';
-//                echo $this->settings['menu_name'];
-//                echo '</pre>';
+                $main_menu = wp_get_nav_menu_object($this->settings['menu_name']);
 
-//                $menu_names[] = $this->settings['menu_name'];
-//
-//                echo '<pre>';
-//                echo $menu_names;
-//                echo '</pre>';
+                // then extract the ID
+                $parent_menu_ID = (int)$main_menu->term_id;
 
-//                foreach($menu_names as $menu){
-//
-//                }
+                // get option if one exists
+                $parent_menu_item = $this->settings['parent_menu'];
 
-                $menu_items = wp_get_nav_menu_items($this->get_parent_menu_ID(), array('post_status' => 'publish'));
+                $menu_items = wp_get_nav_menu_items($parent_menu_ID, array('post_status' => 'publish'));
 
                 foreach ($menu_items as $menu_item) {
                     // only display items in the root menu
@@ -752,7 +736,6 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                     }
                     $html .= '<option value="' . $menu_item->title . '"' . selected($this->settings['parent_menu'], $menu_item->title, false) . '>' . ucfirst($menu_item->title) . '</option>';
                 }
-
 
 
             }
@@ -787,14 +770,55 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                 echo '<span>' . $selected_cpt . '</span>';
                 echo $form;
 
-
                 echo $this->settings_field_select_menu();
                 echo $this->settings_field_select_parent_menu_item();
 
                 echo '<br />';
 
-             }
+            }
 
+        }
+
+
+        /**
+         * Callback to redirect after saving CPT settings. Hooked in Settings Section callback
+         *
+         * @since 1.1.0
+         *
+         * @param $input
+         * @return mixed
+         */
+        private function cpt_settings_redirect() {
+            if (isset($_GET['settings-updated']) && $_GET['settings-updated'] == true) {
+                wp_redirect(admin_url('admin.php?page=cpt_auto_menu&tab=select_menu'));
+            }
+
+            return;
+        }
+
+
+        public function admin_page_redirect() {
+
+//            if (isset($_GET['page']) && $_GET['page'] == 'cpt_auto_menu') {
+//                wp_redirect(admin_url('admin.php?page=cpt_auto_menu&tab=select_menu'));
+//            }
+
+            return;
+        }
+
+
+        /**
+         * Callback from cpt settings.
+         * @TODO-bfp: sanitize or validate or do something with this
+         *
+         * @since 1.1.0
+         *
+         * @param $input
+         * @return mixed
+         */
+        public function cpt_settings_validation($input) {
+
+            return $input;
         }
 
 
@@ -808,26 +832,6 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          * @return array
          */
         public function menu_settings_validation($input) {
-
-            // testing only
-            print_r($input);
-            echo '<br />';
-
-            $cpt_array = $input['cpt'];
-
-            print_r($cpt_array);
-            echo '<br />';
-
-            $menu_name_array = $input['menu_name'];
-
-            print_r($menu_name_array);
-            echo '<br />';
-
-            $parent_name_array = $input['parent_name'];
-
-            print_r($parent_name_array);
-            echo '<br />';
-
 
             // begin here
             $keys = $input['id'];
@@ -847,74 +851,6 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                     'parent_menu' => $parent_name_array[$id]
                 );
             }
-
-//            foreach( $output as $key => $value) {
-//                echo $key; // array indexes
-//                echo $value['cpt'] . '<br />'; // data
-//                echo $value['menu_name']. '<br />';
-//                echo $value['parent_menu']. '<br />';
-//            }
-
-
-//            echo '<br />';
-//
-//            $settings = get_option('cpt_auto_menu_settings');
-//
-//            $cpt = 'project';
-//
-//            print_r($settings);
-//            echo '<br />';
-//            echo $cpt . '<br />';
-//
-//            echo '<br />';
-//
-//            foreach($settings as $key => $value)
-//            {
-//                if ( $value['cpt'] === $cpt )
-//                    echo $key;
-//            }
-//            return false;
-
-
-
-
-
-
-//                    echo '<pre>';
-//                    echo $key;
-//                    echo '</pre>';
-//
-//                    echo '<pre>';
-//                    echo $value;
-//                    echo '</pre>';
-//
-//                    if($key === 'menu_name'){
-//                        echo 'success';
-//                    }
-
-                    // first make sure that a menu has been selected
-//                    if ($value['menu_name'] != false) {
-//
-////                        foreach($key['menu_name'] as $menu_name) {
-////                            echo $menu_name;
-////                        }
-//
-//                        echo $value['menu_name'];
-//
-//                        $this->parent_menu = $key['menu_name'];
-//
-////                        echo $this->parent_menu;
-//
-//
-//                    }
-
-//                }
-//
-//            }
-
-
-// throw this error for testing
-//            $test = $this->run_some_shit();
 
             return $output;
 
@@ -1025,10 +961,9 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                     wp_update_nav_menu_item($this->get_parent_menu_ID(), 0, $itemData);
                 }
 
-
             }
-        }
 
+        }
 
     }
 
