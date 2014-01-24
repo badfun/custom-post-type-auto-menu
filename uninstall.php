@@ -12,7 +12,7 @@ if (!defined('ABSPATH') && !defined('WP_UNINSTALL_PLUGIN'))
 // otherwise remove custom table entries
 global $wpdb;
 
-$sql = "DELETE FROM `wp_options` WHERE `option_name` IN ( 'select_cpt', 'select_menu', 'select_parent_menu')";
+$sql = "DELETE FROM `wp_options` WHERE `option_name` IN ( 'cpt_auto_menu_cpt_list', 'cpt_auto_menu_settings')";
 
 // execute the query
 $wpdb->query($sql);

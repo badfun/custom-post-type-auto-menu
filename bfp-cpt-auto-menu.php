@@ -797,11 +797,25 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
         }
 
 
+        /**
+         * Make sure we always land on a tab and not the base page.
+         * @TODO-bfp: this is a work-around due to how we are loading pages and tabs. Could be better
+         *
+         * @since 1.1.0
+         *
+         */
         public function admin_page_redirect() {
+            // if our request is for the base page
+            if (isset($_GET['page']) && $_GET['page'] == 'cpt_auto_menu') {
 
-//            if (isset($_GET['page']) && $_GET['page'] == 'cpt_auto_menu') {
-//                wp_redirect(admin_url('admin.php?page=cpt_auto_menu&tab=select_menu'));
-//            }
+                // if neither tab has been requested
+                if($_GET['tab'] != 'select_cpt' && $_GET['tab'] != 'select_menu') {
+                    // means we are on base page and can be redirected to first tab
+                    wp_redirect(admin_url('admin.php?page=cpt_auto_menu&tab=select_cpt'));
+
+                }
+
+            }
 
             return;
         }

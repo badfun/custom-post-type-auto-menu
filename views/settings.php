@@ -47,11 +47,16 @@
             // testing shit ++++++++++++++++++++++++++++++
             $selected_cpts = get_option('cpt_auto_menu_cpt_list');
 
+            echo '<pre>';
             print_r($selected_cpts);
+            echo '</pre>';
 
             echo '<br />';
             $selected_menus = get_option('cpt_auto_menu_settings');
+
+            echo '<pre>';
             print_r($selected_menus);
+            echo '</pre>';
 
             echo '<br />';
             print_r ($this->get_cpt_settings('project'));
