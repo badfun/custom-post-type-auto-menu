@@ -320,7 +320,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                 $parent_menu_ID = (int)$main_menu->term_id;
 
                 // get option if one exists
-                $parent_menu_item = get_option('select_parent_menu');
+                $parent_menu_item = $this->settings['parent_menu'];
 
                 $menu_items = wp_get_nav_menu_items($parent_menu_ID, array('post_status' => 'publish'));
 
@@ -329,7 +329,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                     if ($menu_item->menu_item_parent != 0) {
                         continue;
                     }
-                    echo '<option value="' . $menu_item->title . '"' . selected($parent_menu_item['parent_name'], $menu_item->title, false) . '>' . ucfirst($menu_item->title) . '</option>';
+                    echo '<option value="' . $menu_item->title . '"' . selected($this->settings['parent_menu'], $menu_item->title, false) . '>' . ucfirst($menu_item->title) . '</option>';
                 }
 
             }
@@ -428,17 +428,14 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                 // get the settings array for this cpt
                 $settings = $this->get_cpt_settings($selected_cpt);
 
-                if (!$settings['menu_name']) {
-                    return;
+                if ($settings['menu_name'] != false) {
+
+                    $this->parent_menu = $settings['menu_name'];
+
+                    return $this->parent_menu;
                 }
 
-                $this->parent_menu = $settings['menu_name'];
-
-
-                return $this->parent_menu;
-
             }
-
 
         }
 
@@ -545,6 +542,15 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          *
          */
         public function admin_init() {
+            // add our option rows to options table
+            if ( false == get_option('cpt_auto_menu_cpt_list')) {
+                add_option('cpt_auto_menu_cpt_list');
+            }
+
+            if ( false == get_option('cpt_auto_menu_settings')) {
+                add_option('cpt_auto_menu_settings');
+            }
+
 
             // register the settings
             //@TODO-bfp: add sanitization callback to both settings
@@ -616,11 +622,8 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
             if ($this->get_selected_cpts()) {
                 // redirect after save
                 $this->cpt_settings_redirect();
-            }
-
-            // otherwise give error message
-            else
-            {
+            } // otherwise give error message
+            else {
                 $html = '<div class="error"><p>';
                 $html .= __('You need to select at least one Custom Post Type');
                 $html .= '</p></div>';
@@ -672,7 +675,6 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
         }
 
 
-
         /**
          * Get menu names and add to Select Menu
          *
@@ -693,14 +695,13 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
             foreach ($menus as $menu) {
 
-                    $html .= '<option value="' . $menu->name . '"' . selected($this->settings['menu_name'], $menu->name, false) . '>' . ucfirst($menu->name) . '</option>';
-                }
+                $html .= '<option value="' . $menu->name . '"' . selected($this->settings['menu_name'], $menu->name, false) . '>' . ucfirst($menu->name) . '</option>';
+            }
 
 
             $html .= '</select>';
             echo $html;
         }
-
 
 
         /**
@@ -781,7 +782,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
 
         /**
-         * Callback to redirect after saving CPT settings. Hooked in Settings Section callback
+         * Callback to redirect to Menu Settings tab after saving CPT settings. Hooked in Settings Section callback
          *
          * @since 1.1.0
          *
@@ -809,7 +810,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
             if (isset($_GET['page']) && $_GET['page'] == 'cpt_auto_menu') {
 
                 // if neither tab has been requested
-                if($_GET['tab'] != 'select_cpt' && $_GET['tab'] != 'select_menu') {
+                if ($_GET['tab'] != 'select_cpt' && $_GET['tab'] != 'select_menu') {
                     // means we are on base page and can be redirected to first tab
                     wp_redirect(admin_url('admin.php?page=cpt_auto_menu&tab=select_cpt'));
 
@@ -846,14 +847,11 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          * @return array
          */
         public function menu_settings_validation($input) {
-
+        //@TODO-bfp: still need to sanitize
             // begin here
             $keys = $input['id'];
-
             $cpt_array = $input['cpt'];
-
             $menu_name_array = $input['menu_name'];
-
             $parent_name_array = $input['parent_name'];
 
             $output = array();
@@ -866,7 +864,14 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                 );
             }
 
-            return $output;
+//            echo '<pre>';
+//            print_r($output);
+//            echo '</pre>';
+//            $this->run_some_shit();
+
+//            return $output;
+
+            return apply_filters ('menu_settings_validation', $output, $input );
 
         }
 

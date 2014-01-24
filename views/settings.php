@@ -58,14 +58,9 @@
             print_r($selected_menus);
             echo '</pre>';
 
-            echo '<br />';
-            print_r ($this->get_cpt_settings('project'));
-            echo '<br />';
-            $menu = $this->get_cpt_settings('project');
-            echo $menu['menu_name'];
-            echo '<br />';
-            echo $menu['parent_menu'];
-
+            echo '<pre>';
+            echo $this->settings;
+            echo '</pre>';
 
             // end testing shit ++++++++++++++++++++++++++++++
 
