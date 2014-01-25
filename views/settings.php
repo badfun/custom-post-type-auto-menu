@@ -45,22 +45,23 @@
 
 
             // testing shit ++++++++++++++++++++++++++++++
-            $selected_cpts = get_option('cpt_auto_menu_cpt_list');
+//            $selected_cpts = get_option('cpt_auto_menu_cpt_list');
+//
+//            echo '<pre>';
+//            print_r($selected_cpts);
+//            echo '</pre>';
+//
+//            echo '<br />';
+//            $selected_menus = get_option('cpt_auto_menu_settings');
+//
+//            echo '<pre>';
+//            print_r($selected_menus);
+//            echo '</pre>';
+//
+//            echo '<pre>';
+//            echo $this->settings;
+//            echo '</pre>';
 
-            echo '<pre>';
-            print_r($selected_cpts);
-            echo '</pre>';
-
-            echo '<br />';
-            $selected_menus = get_option('cpt_auto_menu_settings');
-
-            echo '<pre>';
-            print_r($selected_menus);
-            echo '</pre>';
-
-            echo '<pre>';
-            echo $this->settings;
-            echo '</pre>';
 
             // end testing shit ++++++++++++++++++++++++++++++
 

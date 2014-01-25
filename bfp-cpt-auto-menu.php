@@ -102,7 +102,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
             add_action('admin_notices', array($this, 'test_for_nav_menu'));
 
             // load main hook action
-            add_action('save_post', array($this, 'custom_post_type_auto_menu'));
+            add_action('save_post', array($this, 'cpt_auto_menu_save'));
 
             // load admin settings actions
             add_action('admin_init', array(&$this, 'admin_init'));
@@ -319,6 +319,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                 // then extract the ID
                 $parent_menu_ID = (int)$main_menu->term_id;
 
+
                 // get option if one exists
                 $parent_menu_item = $this->settings['parent_menu'];
 
@@ -331,7 +332,6 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                     }
                     echo '<option value="' . $menu_item->title . '"' . selected($this->settings['parent_menu'], $menu_item->title, false) . '>' . ucfirst($menu_item->title) . '</option>';
                 }
-
             }
         }
 
@@ -420,23 +420,20 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          * @return mixed
          */
         private function get_parent_menu_name() {
-            $selected_cpts = $this->get_selected_cpts();
+            $cpt = $this->get_current_cpt();
 
-            // for each selected cpt get cpt settings
-            foreach ($selected_cpts as $selected_cpt) {
+            // get the settings array for this cpt
+            $settings = $this->get_cpt_settings($cpt);
 
-                // get the settings array for this cpt
-                $settings = $this->get_cpt_settings($selected_cpt);
+            if ($settings['menu_name'] != false) {
 
-                if ($settings['menu_name'] != false) {
+                $this->parent_menu = $settings['menu_name'];
 
-                    $this->parent_menu = $settings['menu_name'];
-
-                    return $this->parent_menu;
-                }
+                return $this->parent_menu;
 
             }
 
+            return;
         }
 
 
@@ -543,11 +540,11 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          */
         public function admin_init() {
             // add our option rows to options table
-            if ( false == get_option('cpt_auto_menu_cpt_list')) {
+            if (false == get_option('cpt_auto_menu_cpt_list')) {
                 add_option('cpt_auto_menu_cpt_list');
             }
 
-            if ( false == get_option('cpt_auto_menu_settings')) {
+            if (false == get_option('cpt_auto_menu_settings')) {
                 add_option('cpt_auto_menu_settings');
             }
 
@@ -809,6 +806,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
             // if our request is for the base page
             if (isset($_GET['page']) && $_GET['page'] == 'cpt_auto_menu') {
 
+
                 // if neither tab has been requested
                 if ($_GET['tab'] != 'select_cpt' && $_GET['tab'] != 'select_menu') {
                     // means we are on base page and can be redirected to first tab
@@ -847,7 +845,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          * @return array
          */
         public function menu_settings_validation($input) {
-        //@TODO-bfp: still need to sanitize
+            //@TODO-bfp: still need to sanitize
             // begin here
             $keys = $input['id'];
             $cpt_array = $input['cpt'];
@@ -864,35 +862,9 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                 );
             }
 
-//            echo '<pre>';
-//            print_r($output);
-//            echo '</pre>';
-//            $this->run_some_shit();
-
-//            return $output;
-
-            return apply_filters ('menu_settings_validation', $output, $input );
+            return apply_filters('menu_settings_validation', $output, $input);
 
         }
-
-
-        /**
-         * Add a menu to Settings
-         *
-         * @since 1.0.0
-         * @TODO-bfp: possibly make this part of the Appearence/Menus
-         */
-//        public function add_menu() {
-//
-//            add_options_page(
-//                __('CPT Auto Menu Settings'),
-//                __('CPT Auto Menu'),
-//                'manage_options',
-//                'cpt_auto_menu',
-//                array(&$this, 'plugin_settings_page')
-//            );
-//
-//        }
 
 
         /**
@@ -923,7 +895,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          * @param $post_id
          *
          */
-        public function custom_post_type_auto_menu($post_id) {
+        public function cpt_auto_menu_save($post_id) {
             // get the current post
             $post = get_post($post_id);
 
@@ -976,6 +948,23 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                 // finally check that we are not adding a draft to the menu
                 // @TODO-bfp: remove menu item if exists for a draft. If user has published, and then makes a draft, menu item is not removed
                 if (get_post_status($post->ID) != 'draft') {
+
+//                    // test shit
+//                    echo '<pre>';
+//                    echo 'Add Custom Post Type Data';
+//                    echo '<br />';
+//                    echo '<br />';
+//                    echo 'Post ID: ' . $post->ID;
+//                    echo '<br />';
+//                    echo 'Current Custom Post Type: ' . $this->get_current_cpt();
+//                    echo '<br />';
+//                    echo 'Parent Menu ID: ' . $this->get_parent_menu_ID();
+//                    echo '<br />';
+//                    echo 'Parent Menu Item ID: ' . $this->get_parent_menu_item_ID();
+//                    echo '</pre>';
+//                    $this->run_some_shit();
+
+
                     // if new title then go ahead and add new menu item
                     wp_update_nav_menu_item($this->get_parent_menu_ID(), 0, $itemData);
                 }
@@ -988,4 +977,4 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
 }
 
-$custom_post_type_auto_menu = Custom_Post_Type_Auto_Menu::get_instance();
+$cpt_auto_menu_save = Custom_Post_Type_Auto_Menu::get_instance();
