@@ -7,4 +7,4 @@ Custom Post Type Auto Menu allows the user to choose a custom post type, a menu,
 will be added automatically. This is useful for simplifying things for clients who may not be comfortable adding items to menus. Or
 for sites that have a large number of custom post type additions, such as products.
 
-The plugin currently only supports one custom post type.
+The plugin now supports multiple custom post types.

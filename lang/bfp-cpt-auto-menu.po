@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Custom Post Type Auto Menu 1.0.0\n"
-"POT-Creation-Date: 2013-08-30 00:33-0500\n"
-"PO-Revision-Date: 2013-08-30 17:10-0500\n"
+"POT-Creation-Date: 2014-01-26 15:53-0500\n"
+"PO-Revision-Date: 2014-01-26 15:53-0500\n"
 "Last-Translator: Ken Dirschl <ken@badfunproductions.com>\n"
 "Language-Team: Bad Fun Productions <ken@badfunproductions.com>\n"
 "Language: English\n"
@@ -16,60 +16,67 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: bfp-cpt-auto-menu.php:243
+#: bfp-cpt-auto-menu.php:177
+msgid "CPT Auto Menu Settings"
+msgstr ""
+
+#: bfp-cpt-auto-menu.php:178
+msgid "CPT Auto Menu"
+msgstr ""
+
+#: bfp-cpt-auto-menu.php:258
 msgid ""
 "Your theme does not support custom navigation menus. The plugin requires "
 "themes built for at least WordPress 3.0"
 msgstr ""
 
-#: bfp-cpt-auto-menu.php:270
+#: bfp-cpt-auto-menu.php:285
 msgid ""
 "You do not have any menus setup with your theme. You need to create a menu "
 "to use this plugin."
 msgstr ""
 
-#: bfp-cpt-auto-menu.php:406 bfp-cpt-auto-menu.php:563
-msgid "CPT Auto Menu Settings"
+#: bfp-cpt-auto-menu.php:572
+msgid "Custom Post Type Settings"
 msgstr ""
 
-#: bfp-cpt-auto-menu.php:413
-msgid "Custom Post Type"
+#: bfp-cpt-auto-menu.php:580
+msgid "Menu and Parent Menu Item Settings"
 msgstr ""
 
-#: bfp-cpt-auto-menu.php:424
-msgid "Menu Name"
+#: bfp-cpt-auto-menu.php:592
+msgid "Available Custom Post Types"
 msgstr ""
 
-#: bfp-cpt-auto-menu.php:435
-msgid "Parent Menu Item"
+#: bfp-cpt-auto-menu.php:603
+msgid "Select Menu and Parent Menu Item"
 msgstr ""
 
-#: bfp-cpt-auto-menu.php:453
+#: bfp-cpt-auto-menu.php:627
 msgid ""
-"Select the custom post type, the menu, and which parent you would like to "
-"add to."
+"Select the custom post types for which you would like an automated menu."
 msgstr ""
 
-#: bfp-cpt-auto-menu.php:467
-msgid "Select a Custom Post Type"
+#: bfp-cpt-auto-menu.php:636
+msgid "You need to select at least one Custom Post Type"
 msgstr ""
 
-#: bfp-cpt-auto-menu.php:501
+#: bfp-cpt-auto-menu.php:652
+msgid "Select the menu and parent menu item for each custom post type"
+msgstr ""
+
+#: bfp-cpt-auto-menu.php:694
 msgid "Select Menu"
 msgstr ""
 
-#: bfp-cpt-auto-menu.php:526
+#: bfp-cpt-auto-menu.php:723
 msgid "Select Menu Item"
 msgstr ""
 
-#: bfp-cpt-auto-menu.php:564
-msgid "CPT Auto Menu"
-msgstr ""
-
-#: bfp-cpt-auto-menu.php:584
+#: bfp-cpt-auto-menu.php:891
 msgid "You do not have sufficient permissions to access this page"
 msgstr ""
 
-#: views/settings.php:10
+#: views/settings.php:15
 msgid "Custom Post Type Auto Menu"
 msgstr ""

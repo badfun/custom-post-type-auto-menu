@@ -9,7 +9,7 @@ Author URI: http://badfunproductions.com
 Author Email: ken@badfunproductions.com
 License:
 
-  Copyright 2013 Bad Fun Productions
+  Copyright 2014 Bad Fun Productions
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License, version 2, as
@@ -25,11 +25,6 @@ License:
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 */
-
-//@TODO-bfp: fix page where options reside
-//@TOD-bfp: redirect to menu settings after cpt settings is saved
-//@TODO-bfp: solve double 'settings saved' error
-//@TODO-bfp: remove all debug code
 
 if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
@@ -134,7 +129,6 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
         private $parent_menu_item_ID;
         private $current_cpt;
         private $cpt_list;
-//        private $menu_selects;
         private $settings;
         private $main_page;
 
@@ -149,7 +143,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
             //@TODO-bfp: this redirect not working
             // Redirect to settings page if not activating multiple plugins at once
             if (!isset($_GET['activate-multi'])) {
-                wp_redirect(admin_url('admin.php?page=cpt_auto_menu'));
+                wp_redirect(admin_url('admin.php?page=cpt_auto_menu&tab=select_cpt'));
             }
         }
 
@@ -191,8 +185,11 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
             add_action('load-' . $this->main_page, array($this, 'load_admin_js'));
 
-            // test settings redirect (works with bug when no cpt settings @TODO-bfp: remove this after better solution
+            // also use this hook for page redirection
             add_action('load-' . $this->main_page, array($this, 'admin_page_redirect'));
+
+            // and for adding our stylesheet
+            add_action('admin_print_styles-' . $this->main_page, array($this, 'load_admin_css'));
         }
 
 
@@ -237,6 +234,14 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                 ));
         }
 
+
+        public function admin_register_css() {
+            wp_register_style('cpt-auto-menu-style', plugins_url('css/cpt-auto-menu.css', __FILE__));
+        }
+
+        public function load_admin_css() {
+            wp_enqueue_style('cpt-auto-menu-style');
+        }
 
         /**
          * Test for Nav Menu Support. If theme does not support menus output admin error notice
@@ -319,7 +324,6 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                 // then extract the ID
                 $parent_menu_ID = (int)$main_menu->term_id;
 
-
                 // get option if one exists
                 $parent_menu_item = $this->settings['parent_menu'];
 
@@ -399,11 +403,16 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          *
          * @return bool|string
          *
-         * @TODO-bfp: make sure this only happens when not on our page (although it should return false)
          */
         private function get_current_cpt() {
+            $screen = get_current_screen();
 
-            // get the current custom post type
+            // if we are on our page do nothing
+            if ($screen->id == $this->main_page) {
+                return;
+            }
+
+            // otherwise get the current custom post type
             $this->current_cpt = get_post_type();
 
             return $this->current_cpt;
@@ -550,7 +559,6 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
 
             // register the settings
-            //@TODO-bfp: add sanitization callback to both settings
             register_setting('select_cpt_settings', 'cpt_auto_menu_cpt_list', array(&$this, 'cpt_settings_validation'));
             register_setting('select_menu_settings', 'cpt_auto_menu_settings', array(&$this, 'menu_settings_validation'));
 
@@ -598,6 +606,9 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                 'select_menu_section',
                 array()
             );
+
+            // add our registered stylesheet
+            $this->admin_register_css();
 
         }
 
@@ -765,7 +776,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                 $form = '<input type="hidden" name="cpt_auto_menu_settings[id][]" value="' . $i++ . '">';
                 $form .= '<input type="hidden" name="cpt_auto_menu_settings[cpt][]" value="' . $selected_cpt . '">';
 
-                echo '<span>' . $selected_cpt . '</span>';
+                echo '<h4 class="cpt-heading">' . ucfirst($selected_cpt) . '</h4>';
                 echo $form;
 
                 echo $this->settings_field_select_menu();
@@ -846,7 +857,6 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          */
         public function menu_settings_validation($input) {
             //@TODO-bfp: still need to sanitize
-            // begin here
             $keys = $input['id'];
             $cpt_array = $input['cpt'];
             $menu_name_array = $input['menu_name'];
@@ -894,6 +904,8 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          *
          * @param $post_id
          *
+         * @TODO-bfp: remove menu item if exists for a draft. If user has published, and then makes a draft, menu item is not removed
+         * @TODO-bfp: remove menu item when cpt post is trashed. Used to work. Check with earlier version.
          */
         public function cpt_auto_menu_save($post_id) {
             // get the current post
@@ -946,24 +958,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                 }
 
                 // finally check that we are not adding a draft to the menu
-                // @TODO-bfp: remove menu item if exists for a draft. If user has published, and then makes a draft, menu item is not removed
                 if (get_post_status($post->ID) != 'draft') {
-
-//                    // test shit
-//                    echo '<pre>';
-//                    echo 'Add Custom Post Type Data';
-//                    echo '<br />';
-//                    echo '<br />';
-//                    echo 'Post ID: ' . $post->ID;
-//                    echo '<br />';
-//                    echo 'Current Custom Post Type: ' . $this->get_current_cpt();
-//                    echo '<br />';
-//                    echo 'Parent Menu ID: ' . $this->get_parent_menu_ID();
-//                    echo '<br />';
-//                    echo 'Parent Menu Item ID: ' . $this->get_parent_menu_item_ID();
-//                    echo '</pre>';
-//                    $this->run_some_shit();
-
 
                     // if new title then go ahead and add new menu item
                     wp_update_nav_menu_item($this->get_parent_menu_ID(), 0, $itemData);

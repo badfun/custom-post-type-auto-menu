@@ -43,35 +43,13 @@
             do_settings_sections('select_cpt_settings');
         } else if ($active_tab == 'select_menu') {
 
-
-            // testing shit ++++++++++++++++++++++++++++++
-//            $selected_cpts = get_option('cpt_auto_menu_cpt_list');
-//
-//            echo '<pre>';
-//            print_r($selected_cpts);
-//            echo '</pre>';
-//
-//            echo '<br />';
-//            $selected_menus = get_option('cpt_auto_menu_settings');
-//
-//            echo '<pre>';
-//            print_r($selected_menus);
-//            echo '</pre>';
-//
-//            echo '<pre>';
-//            echo $this->settings;
-//            echo '</pre>';
-
-
-            // end testing shit ++++++++++++++++++++++++++++++
-
-              settings_fields('select_menu_settings');
-              do_settings_sections('select_menu_settings');
-
+            settings_fields('select_menu_settings');
+            do_settings_sections('select_menu_settings');
 
         }
         ?>
 
         <?php @submit_button(); ?>
     </form>
+
 </div>
