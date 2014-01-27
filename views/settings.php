@@ -12,7 +12,7 @@
 <div class="wrap">
     <?php screen_icon(); ?>
 
-    <h2><?php echo __('Custom Post Type Auto Menu'); ?></h2>
+    <h2><?php echo __('Custom Post Type Auto Menu', $this->plugin_slug); ?></h2>
 
     <?php settings_errors(); ?>
 
@@ -22,7 +22,7 @@
 
     <h2 class="nav-tab-wrapper">
         <a href="?page=cpt_auto_menu&tab=select_cpt"
-           class="nav-tab <?php echo $active_tab == 'select_cpt' ? 'nav-tab-active' : ''; ?>">CPT Settings</a>
+           class="nav-tab <?php echo $active_tab == 'select_cpt' ? 'nav-tab-active' : ''; ?>"><?php _e('CPT Settings', $this->plugin_slug); ?></a>
 
         <?php
         // if custom post type has been chosen display menu tab
@@ -30,7 +30,7 @@
             ?>
 
             <a href="?page=cpt_auto_menu&tab=select_menu"
-               class="nav-tab <?php echo $active_tab == 'select_menu' ? 'nav-tab-active' : ''; ?>">Menu Settings</a>
+               class="nav-tab <?php echo $active_tab == 'select_menu' ? 'nav-tab-active' : ''; ?>"><?php _e('Menu Settings', $this->plugin_slug); ?></a>
 
         <?php } ?>
     </h2>
@@ -49,7 +49,7 @@
         }
         ?>
 
-        <?php @submit_button(); ?>
+        <?php @submit_button(__('Save Settings', $this->plugin_slug)); ?>
     </form>
 
     <br/>
@@ -62,7 +62,8 @@
             <?php _e('Custom Post Type Auto Menu', $this->plugin_slug); ?></a>
         <?php _e('version', $this->plugin_slug);
         echo ' ' . $this->version; ?>
-        by <a href="http://badfunproductions.com" target="_blank">Bad Fun Productions</a> -
+        <?php _e('by', $this->plugin_slug); ?>
+        <a href="http://badfunproductions.com" target="_blank">Bad Fun Productions</a> -
         <a href="https://github.com/badfun/custom-post-type-auto-menu"
            target="_blank"><?php _e('Please Report Bugs', $this->plugin_slug); ?></a> &middot;
         <?php _e('Follow on Twitter:', $this->plugin_slug); ?>

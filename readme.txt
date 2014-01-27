@@ -69,6 +69,6 @@ There are other available solutions for that, but if there is demand I could inc
 
 == Known Issues ==
 
-* After a custom post type post has been published, if it is updated to 'draft' the item stays in the menu
-* When a custom post type post post has been trashed, it leaves an artifact in the menu. This wasn't happening before 3.8.
+* After a custom post type post has been published, if it is downgraded to 'draft' the item stays in the menu
+* Bulk trashing custom post types will leave the menu items behind.
 

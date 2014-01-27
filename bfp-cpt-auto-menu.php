@@ -7,6 +7,9 @@ Version: 1.1.0
 Author: Ken Dirschl, Bad Fun Productions
 Author URI: http://badfunproductions.com
 Author Email: ken@badfunproductions.com
+Text Domain: bfp-cpt-auto-menu
+Domain Path: /lang/
+
 License:
 
   Copyright 2014 Bad Fun Productions
@@ -266,7 +269,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
             if (!current_theme_supports('menus')) {
                 $html = '<div class="error"><p>';
-                $html .= __('Your theme does not support custom navigation menus. The plugin requires themes built for at least WordPress 3.0');
+                $html .= __('Your theme does not support custom navigation menus. The plugin requires themes built for at least WordPress 3.0', $this->plugin_slug);
                 $html .= '</p></div>';
 
                 echo $html;
@@ -293,7 +296,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
                 if (empty($menus)) {
                     $html = '<div class="error"><p>';
-                    $html .= __('You do not have any menus setup with your theme. You need to create a menu to use this plugin.');
+                    $html .= __('You do not have any menus setup with your theme. You need to create a menu to use this plugin.', $this->plugin_slug);
                     $html .= '</p></div>';
 
                     echo $html;
@@ -323,12 +326,12 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
                 // verify our nonce
                 if (!wp_verify_nonce($_POST['ajaxnonce'], 'ajax-form-nonce')) {
-                    die ('There is an access error');
+                    die ( __('There is an access error', $this->plugin_slug) );
                 }
 
                 // verify user has permission
                 if (!current_user_can('edit_posts')) {
-                    die ('You do not have sufficient permission');
+                    die ( __('You do not have sufficient permission', $this->plugin_slug) );
                 }
 
                 $main_menu = wp_get_nav_menu_object($_POST['selected_menu']);
@@ -581,7 +584,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
             // Select custom post type(s) section
             add_settings_section(
                 'select_cpt_section',
-                __('Custom Post Type Settings'),
+                __('Custom Post Type Settings', $this->plugin_slug),
                 array(&$this, 'select_cpt_section'),
                 'select_cpt_settings'
             );
@@ -589,7 +592,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
             // Select menu and menu parent item section
             add_settings_section(
                 'select_menu_section',
-                __('Menu and Parent Menu Item Settings'),
+                __('Menu and Parent Menu Item Settings', $this->plugin_slug),
                 array(&$this, 'select_menu_section'),
                 'select_menu_settings'
             );
@@ -601,7 +604,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
             // select custom post types checkbox menu
             add_settings_field(
                 'cpt_auto_menu-select_cpts',
-                __('Available Custom Post Types'),
+                __('Available Custom Post Types', $this->plugin_slug),
                 array(&$this, 'settings_field_select_cpts'),
                 'select_cpt_settings',
                 'select_cpt_section',
@@ -612,7 +615,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
             // select menu and parent menu item
             add_settings_field(
                 'cpt_auto_menu-select_menus',
-                __('Select Menu and Parent Menu Item'),
+                __('Select Menu and Parent Menu Item', $this->plugin_slug),
                 array(&$this, 'settings_field_select_menus'),
                 'select_menu_settings',
                 'select_menu_section',
@@ -636,7 +639,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          */
         public function select_cpt_section() {
 
-            echo __('Select the custom post types for which you would like an automated menu.');
+            echo __('Select the custom post types for which you would like an automated menu.', $this->plugin_slug);
 
             // if cpts have been selected then redirect to menu page
             if ($this->get_selected_cpts()) {
@@ -645,7 +648,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
             } // otherwise give error message
             else {
                 $html = '<div class="error"><p>';
-                $html .= __('You need to select at least one Custom Post Type');
+                $html .= __('You need to select at least one Custom Post Type', $this->plugin_slug);
                 $html .= '</p></div>';
                 echo $html;
             }
@@ -661,7 +664,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          */
         public function select_menu_section() {
 
-            echo __('Select the menu and parent menu item for each custom post type');
+            echo __('Select the menu and parent menu item for each custom post type', $this->plugin_slug);
         }
 
 
@@ -703,7 +706,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          */
         private function settings_field_select_menu() {
 
-            $text = __('Select Menu');
+            $text = __('Select Menu', $this->plugin_slug);
 
             // get list of menus
             //@TODO-bfp: may need to lowercase results
@@ -734,7 +737,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          */
         private function settings_field_select_parent_menu_item() {
 
-            $text = __('Select Menu Item');
+            $text = __('Select Menu Item', $this->plugin_slug);
 
             $html = '<select class="parent_name" name="cpt_auto_menu_settings[parent_name][]">';
             $html .= '<option value="default" class="highlight">' . $text . '</option>';
