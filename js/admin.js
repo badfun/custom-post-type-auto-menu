@@ -7,6 +7,7 @@
  * Clues: http://stackoverflow.com/questions/16784936/how-to-send-or-assign-jquery-variable-value-to-php-variable
  * http://www.9lessons.info/2010/08/dynamic-dependent-select-box-using.html
  *
+ * @TODO-bfp: selected_menu value is being passed for parent menu item too. Generates an Ajax warning but works.
  */
 jQuery(document).ready(function($) {
 

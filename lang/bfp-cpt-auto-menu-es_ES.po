@@ -2,10 +2,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Custom Post Type Auto Menu 1.1.0\n"
 "POT-Creation-Date: 2014-01-26 16:21-0500\n"
-"PO-Revision-Date: 2014-01-26 16:22-0500\n"
+"PO-Revision-Date: 2014-01-26 17:04-0500\n"
 "Last-Translator: Ken Dirschl <ken@badfunproductions.com>\n"
-"Language-Team: Bad Fun Productions <ken@badfunproductions.com>\n"
-"Language: English\n"
+"Language-Team: Andrew Kurtis <andrewk@webhostinghub.com>\n"
+"Language: Spanish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -18,23 +18,27 @@ msgstr ""
 
 #: bfp-cpt-auto-menu.php:177
 msgid "CPT Auto Menu Settings"
-msgstr ""
+msgstr "Configuración de Menú CPT Auto"
 
 #: bfp-cpt-auto-menu.php:178
 msgid "CPT Auto Menu"
-msgstr ""
+msgstr "Menú Automático CPT"
 
 #: bfp-cpt-auto-menu.php:258
 msgid ""
 "Your theme does not support custom navigation menus. The plugin requires "
 "themes built for at least WordPress 3.0"
 msgstr ""
+"Su tema no soporta menús de navegación personalizados. El plugin requiere "
+"temas construidos para al menos WordPress 3.0"
 
 #: bfp-cpt-auto-menu.php:285
 msgid ""
 "You do not have any menus setup with your theme. You need to create a menu "
 "to use this plugin."
 msgstr ""
+"Usted no tiene ningún tipo de menús configurados con su tema. Es necesario "
+"crear un menú para usar este plugin."
 
 #: bfp-cpt-auto-menu.php:572
 msgid "Custom Post Type Settings"
@@ -42,7 +46,7 @@ msgstr ""
 
 #: bfp-cpt-auto-menu.php:580
 msgid "Menu and Parent Menu Item Settings"
-msgstr ""
+msgstr "Configuración de Menú y Elemento Padre del Menú"
 
 #: bfp-cpt-auto-menu.php:592
 msgid "Available Custom Post Types"
@@ -50,7 +54,7 @@ msgstr ""
 
 #: bfp-cpt-auto-menu.php:603
 msgid "Select Menu and Parent Menu Item"
-msgstr ""
+msgstr "Seleccionar Menú y Elemento Padre del Menú"
 
 #: bfp-cpt-auto-menu.php:627
 msgid ""
@@ -67,16 +71,16 @@ msgstr ""
 
 #: bfp-cpt-auto-menu.php:694
 msgid "Select Menu"
-msgstr ""
+msgstr "Seleccionar Menú"
 
 #: bfp-cpt-auto-menu.php:723
 msgid "Select Menu Item"
-msgstr ""
+msgstr "Seleccione Elemento del menú"
 
 #: bfp-cpt-auto-menu.php:891
 msgid "You do not have sufficient permissions to access this page"
-msgstr ""
+msgstr "Usted no tiene los permisos necesarios para acceder a esta página"
 
 #: views/settings.php:15
 msgid "Custom Post Type Auto Menu"
-msgstr ""
+msgstr "Menú Automatizado para Tipo de Publicación Personalizada"

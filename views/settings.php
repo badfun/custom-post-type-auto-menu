@@ -52,4 +52,20 @@
         <?php @submit_button(); ?>
     </form>
 
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+
+    <hr/>
+    <p><a target="_blank" href="http://wordpress.org/plugins/custom-post-type-auto-menu/">
+            <?php _e('Custom Post Type Auto Menu', $this->plugin_slug); ?></a>
+        <?php _e('version', $this->plugin_slug);
+        echo ' ' . $this->version; ?>
+        by <a href="http://badfunproductions.com" target="_blank">Bad Fun Productions</a> -
+        <a href="https://github.com/badfun/custom-post-type-auto-menu"
+           target="_blank"><?php _e('Please Report Bugs', $this->plugin_slug); ?></a> &middot;
+        <?php _e('Follow on Twitter:', $this->plugin_slug); ?>
+        <a href="http://twitter.com/badfunpro" target="_blank">BadFun Productions</a></p>
+
 </div>

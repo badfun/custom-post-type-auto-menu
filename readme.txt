@@ -43,7 +43,8 @@ There are other available solutions for that, but if there is demand I could inc
 
 == Screenshots ==
 
-1. The settings page. Easy!
+1. Custom Post Type Settings page. Choose at least one.
+2. Menu Settings page. Choose which menu and which menu item the automated cpt post should appear in.
 
 == Changelog ==
 

@@ -111,7 +111,6 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
             // register activation
             register_activation_hook(__FILE__, array($this, 'activate'));
 
-
         }
 
 
@@ -234,11 +233,23 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                 ));
         }
 
-
-        public function admin_register_css() {
+        /**
+         * Register our css stylesheet
+         *
+         * @since 1.1.0
+         *
+         */
+        private function admin_register_css() {
             wp_register_style('cpt-auto-menu-style', plugins_url('css/cpt-auto-menu.css', __FILE__));
         }
 
+
+        /**
+         * Load our css stylesheet.
+         *
+         * @since 1.1.0
+         *
+         */
         public function load_admin_css() {
             wp_enqueue_style('cpt-auto-menu-style');
         }
@@ -302,6 +313,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          * @version 1.1.0
          *
          * @since 1.0.0
+         *
          *
          */
         public function admin_script_ajax_handler() {
@@ -717,6 +729,8 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          *
          * @since 1.0.0
          *
+         * @TODO-bfp: wp_get_nav_menu_items() generating php notice
+         *
          */
         private function settings_field_select_parent_menu_item() {
 
@@ -905,7 +919,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          * @param $post_id
          *
          * @TODO-bfp: remove menu item if exists for a draft. If user has published, and then makes a draft, menu item is not removed
-         * @TODO-bfp: remove menu item when cpt post is trashed. Used to work. Check with earlier version.
+         * @TODO-bfp: bulk trashes do not work.
          */
         public function cpt_auto_menu_save($post_id) {
             // get the current post
@@ -933,19 +947,28 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
                 return;
             }
 
-            // if post is in trash delete post
-            if (get_post_status($post->ID) == 'trash') {
-                wp_delete_post($post->ID);
-            }
-
             // create array for titles
             $current_menu_titles = array();
+
             // extract list of titles from menu objects and populate array
             foreach ($current_menu_items as $current_menu_item) {
                 $current_menu_titles[] = $current_menu_item->title;
+
+                // get the menu post object id from matching the current id to the object id in menu post object
+                // check if item is being trashed
+                if ($current_menu_item->object_id == $post->ID && get_post_status($post->ID) == 'trash') {
+                    // the id of the menu post object NOT the post!
+                    $menuID = $current_menu_item->db_id;
+
+                    // delete the nav menu item post object
+                    wp_delete_post($menuID);
+
+                }
+
             }
 
-            // get title of current project
+
+            // otherwise get title of current project
             $new_project_title = get_the_title($post->ID);
 
 
