@@ -32,8 +32,9 @@ There are other available solutions for that, but if there is demand I could inc
 
 ## Known Issues
 
-* After a custom post type post has been published, if it is downgraded to 'draft' the item stays in the menu
+* After a custom post type post has been published, if it is downgraded to 'draft' the item stays in the menu.
 * Bulk trashing custom post types will leave the menu items behind.
+* Menu items can not have the same name, even if attached to different menus.
 
 
 ## Changelog

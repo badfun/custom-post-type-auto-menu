@@ -19,6 +19,8 @@ for sites that have a large number of custom post type additions, such as produc
 
 The plugin now supports multiple custom post types
 
+NOTE: If you were using the older version of the plugin you will need to re-do your settings!
+
 
 == Installation ==
 
@@ -59,16 +61,19 @@ There are other available solutions for that, but if there is demand I could inc
 * Moved CPT Auto Menu to its own menu page
 * Added Spanish, French and Italian translations
 
+== Upgrade Notice ==
 
+=1.1.0 = If you were using an earlier version you will need to re-do your settings for the custom post type. This is because
+the settings had to be changed completely to support multiple custom post types.
+
+== Known Issues ==
+
+* After a custom post type post has been published, if it is downgraded to 'draft' the item stays in the menu.
+* Bulk trashing custom post types will leave the menu items behind.
+* Menu items can not have the same name, even if attached to different menus.
 
 == Acknowledgements ==
 
 * Thanks to Andrew Kurtis of [WebHostingHub](http://www.webhostinghub.com/) for the Spanish translation
 * There are various urls in the code from developers whose solutions I used to solve problems. Thanks everyone!
-
-
-== Known Issues ==
-
-* After a custom post type post has been published, if it is downgraded to 'draft' the item stays in the menu
-* Bulk trashing custom post types will leave the menu items behind.
 
