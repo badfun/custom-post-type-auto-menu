@@ -34,7 +34,7 @@ The plugin now supports multiple custom post types
 The plugin now supports multiple custom post types
 
 = Can I create sub-sub menu items? =
-Not yet, but maybe in the future.
+Yes. But it requires a mod to the code and can lead to strange issues. I'll figure it out for future versions.
 
 = What about categories and pages? =
 There are other available solutions for that, but if there is demand I could incorporate it in future releases.
@@ -57,7 +57,7 @@ There are other available solutions for that, but if there is demand I could inc
 = 1.1.0 =
 * Now able to select multiple custom post types
 * Moved CPT Auto Menu to its own menu page
-* Added Spanish translation
+* Added Spanish, French and Italian translations
 
 
 

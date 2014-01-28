@@ -326,12 +326,12 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
 
                 // verify our nonce
                 if (!wp_verify_nonce($_POST['ajaxnonce'], 'ajax-form-nonce')) {
-                    die ( __('There is an access error', $this->plugin_slug) );
+                    die (__('There is an access error', $this->plugin_slug));
                 }
 
                 // verify user has permission
                 if (!current_user_can('edit_posts')) {
-                    die ( __('You do not have sufficient permission', $this->plugin_slug) );
+                    die (__('You do not have sufficient permission', $this->plugin_slug));
                 }
 
                 $main_menu = wp_get_nav_menu_object($_POST['selected_menu']);
