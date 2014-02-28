@@ -50,6 +50,10 @@ There are other available solutions for that, but if there is demand I could inc
 * Moved CPT Auto Menu to its own menu page
 * Added Spanish, French and Italian translations
 
+= 1.1.1 =
+* Added German translation. Thanks Dad!
+* Updated Spanish translation. Thanks Andrew!
+
 
 
 ## Acknowledgements

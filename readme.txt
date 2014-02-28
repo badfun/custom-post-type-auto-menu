@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: custom post type, menus, auto menu
 Requires at least: 3.0.1
 Tested up to: 3.8
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,6 +60,10 @@ There are other available solutions for that, but if there is demand I could inc
 * Now able to select multiple custom post types
 * Moved CPT Auto Menu to its own menu page
 * Added Spanish, French and Italian translations
+
+= 1.1.1 =
+* Added German translation. Thanks Dad!
+* Updated Spanish translation. Thanks Andrew!
 
 == Upgrade Notice ==
 
