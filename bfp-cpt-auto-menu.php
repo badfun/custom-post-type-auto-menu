@@ -817,6 +817,7 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
         private function cpt_settings_redirect() {
             if (isset($_GET['settings-updated']) && $_GET['settings-updated'] == true) {
                 wp_redirect(admin_url('admin.php?page=cpt_auto_menu&tab=select_menu'));
+				exit;
             }
 
             return;
@@ -834,12 +835,11 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
             // if our request is for the base page
             if (isset($_GET['page']) && $_GET['page'] == 'cpt_auto_menu') {
 
-
                 // if neither tab has been requested
                 if ($_GET['tab'] != 'select_cpt' && $_GET['tab'] != 'select_menu') {
                     // means we are on base page and can be redirected to first tab
                     wp_redirect(admin_url('admin.php?page=cpt_auto_menu&tab=select_cpt'));
-
+					exit;
                 }
 
             }
