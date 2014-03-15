@@ -50,26 +50,29 @@ There are other available solutions for that, but if there is demand I could inc
 
 == Changelog ==
 
-= 1.0.0 =
-* First upload of working plugin.
+= 1.1.2 =
+* Fixed translation strings to WordPress I18n standards
+* Formatted code to WordPress standards
+* Added a few missing empty variable checks
+* Added missing exits after redirect functions
 
-= 1.0.1 =
-* Fixed bug where saving draft created menu item
+= 1.1.1 =
+* Added German translation. Thanks Dad!
+* Updated Spanish translation. Thanks Andrew!
 
 = 1.1.0 =
 * Now able to select multiple custom post types
 * Moved CPT Auto Menu to its own menu page
 * Added Spanish, French and Italian translations
 
-= 1.1.1 =
-* Added German translation. Thanks Dad!
-* Updated Spanish translation. Thanks Andrew!
+= 1.0.1 =
+* Fixed bug where saving draft created menu item
 
-= 1.1.2 =
-* Fixed translation strings to WordPress I18n standards
-* Formatted code to WordPress standards
-* Added a few missing empty variable checks
-* Added missing exits after redirect functions
+= 1.0.0 =
+* First upload of working plugin.
+
+
+
 
 
 == Upgrade Notice ==

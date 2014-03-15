@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Custom Post Type Auto Menu 1.1.0\n"
-"POT-Creation-Date: 2014-01-27 17:53-0500\n"
-"PO-Revision-Date: 2014-01-27 17:54-0500\n"
+"POT-Creation-Date: 2014-03-15 14:13-0500\n"
+"PO-Revision-Date: 2014-03-15 14:13-0500\n"
 "Last-Translator: Ken Dirschl <ken@badfunproductions.com>\n"
 "Language-Team: Bad Fun Productions <ken@badfunproductions.com>\n"
 "Language: English\n"
@@ -24,64 +24,64 @@ msgstr ""
 msgid "CPT Auto Menu"
 msgstr ""
 
-#: bfp-cpt-auto-menu.php:272
+#: bfp-cpt-auto-menu.php:274
 msgid ""
 "Your theme does not support custom navigation menus. The plugin requires "
 "themes built for at least WordPress 3.0"
 msgstr ""
 
-#: bfp-cpt-auto-menu.php:299
+#: bfp-cpt-auto-menu.php:302
 msgid ""
 "You do not have any menus setup with your theme. You need to create a menu "
 "to use this plugin."
 msgstr ""
 
-#: bfp-cpt-auto-menu.php:329
+#: bfp-cpt-auto-menu.php:333
 msgid "There is an access error"
 msgstr ""
 
-#: bfp-cpt-auto-menu.php:334
+#: bfp-cpt-auto-menu.php:338
 msgid "You do not have sufficient permission"
 msgstr ""
 
-#: bfp-cpt-auto-menu.php:587
+#: bfp-cpt-auto-menu.php:592
 msgid "Custom Post Type Settings"
 msgstr ""
 
-#: bfp-cpt-auto-menu.php:595
+#: bfp-cpt-auto-menu.php:600
 msgid "Menu and Parent Menu Item Settings"
 msgstr ""
 
-#: bfp-cpt-auto-menu.php:607
+#: bfp-cpt-auto-menu.php:612
 msgid "Available Custom Post Types"
 msgstr ""
 
-#: bfp-cpt-auto-menu.php:618
+#: bfp-cpt-auto-menu.php:623
 msgid "Select Menu and Parent Menu Item"
 msgstr ""
 
-#: bfp-cpt-auto-menu.php:642
+#: bfp-cpt-auto-menu.php:647
 msgid ""
 "Select the custom post types for which you would like an automated menu."
 msgstr ""
 
-#: bfp-cpt-auto-menu.php:651
+#: bfp-cpt-auto-menu.php:656
 msgid "You need to select at least one Custom Post Type"
 msgstr ""
 
-#: bfp-cpt-auto-menu.php:667
+#: bfp-cpt-auto-menu.php:672
 msgid "Select the menu and parent menu item for each custom post type"
 msgstr ""
 
-#: bfp-cpt-auto-menu.php:709
+#: bfp-cpt-auto-menu.php:714
 msgid "Select Menu"
 msgstr ""
 
-#: bfp-cpt-auto-menu.php:740
+#: bfp-cpt-auto-menu.php:745
 msgid "Select Menu Item"
 msgstr ""
 
-#: bfp-cpt-auto-menu.php:908
+#: bfp-cpt-auto-menu.php:918
 msgid "You do not have sufficient permissions to access this page"
 msgstr ""
 
