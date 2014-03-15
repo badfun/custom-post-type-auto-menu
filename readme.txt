@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: custom post type, menus, auto menu
 Requires at least: 3.0.1
 Tested up to: 3.8
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -64,6 +64,13 @@ There are other available solutions for that, but if there is demand I could inc
 = 1.1.1 =
 * Added German translation. Thanks Dad!
 * Updated Spanish translation. Thanks Andrew!
+
+= 1.1.2 =
+* Fixed translation strings to WordPress I18n standards
+* Formatted code to WordPress standards
+* Added a few missing empty variable checks
+* Added missing exits after redirect functions
+
 
 == Upgrade Notice ==
 

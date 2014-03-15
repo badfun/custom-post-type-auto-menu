@@ -54,6 +54,11 @@ There are other available solutions for that, but if there is demand I could inc
 * Added German translation. Thanks Dad!
 * Updated Spanish translation. Thanks Andrew!
 
+= 1.1.2 =
+* Fixed translation strings to WordPress I18n standards
+* Formatted code to WordPress standards
+* Added a few missing empty variable checks
+* Added missing exits after redirect functions
 
 
 ## Acknowledgements
