@@ -644,8 +644,6 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 		 *
 		 * @link    http://wordpress.stackexchange.com/questions/89251/run-function-on-settings-save
 		 *
-		 * @TODO-bfp: this error message should only show after empty submission. The redirect should not work on emtpy submission
-		 *
 		 */
 		public function select_cpt_section() {
 
@@ -825,7 +823,6 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 			if ( isset( $_GET['settings-updated'] ) && $_GET['settings-updated'] == true ) {
 
 				// if no cpt selected echo error
-				//@TODO-bfp: error message shows in wrong place. Settings saved message should not appear.
 				if ( ! $this->get_selected_cpts() ) {
 
 					add_settings_error(
