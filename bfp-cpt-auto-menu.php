@@ -108,6 +108,9 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 			// create an admin page and prepare enqueue our scripts
 			add_action( 'admin_menu', array( &$this, 'add_admin_menu_page' ) );
 
+			// redirect must happen before headers are sent
+			add_action( 'admin_menu', array( $this, 'cpt_settings_redirect' ) );
+
 			// load ajax handler
 			add_action( 'wp_ajax_admin_script_ajax', array( $this, 'admin_script_ajax_handler' ) );
 
@@ -641,21 +644,17 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 		 *
 		 * @link    http://wordpress.stackexchange.com/questions/89251/run-function-on-settings-save
 		 *
+		 * @TODO-bfp: this error message should only show after empty submission. The redirect should not work on emtpy submission
+		 *
 		 */
 		public function select_cpt_section() {
 
 			echo __( 'Select the custom post types for which you would like an automated menu.', 'bfp-cpt-auto-menu' );
 
-			// if cpts have been selected then redirect to menu page
+			// if selected cpts are not an empty array then redirect to menu page, otherwise give error message
 			if ( $this->get_selected_cpts() ) {
 				// redirect after save
 				$this->cpt_settings_redirect();
-			} // otherwise give error message
-			else {
-				$html = '<div class="error"><p>';
-				$html .= __( 'You need to select at least one Custom Post Type', 'bfp-cpt-auto-menu' );
-				$html .= '</p></div>';
-				echo $html;
 			}
 
 		}
@@ -768,7 +767,6 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 					$html .= '<option value="' . $menu_item->title . '"' . selected( $this->settings['parent_menu'], $menu_item->title, false ) . '>' . ucfirst( $menu_item->title ) . '</option>';
 				}
 
-
 			}
 
 			$html .= '</select>';
@@ -814,25 +812,31 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 		/**
 		 * Callback to redirect to Menu Settings tab after saving CPT settings. Hooked in Settings Section callback
 		 *
-		 * @since 1.1.0
+		 * @since   1.1.0
 		 *
 		 * @version 1.1.3
-		 *
-		 * @link: http://www.lessthanweb.com/blog/wordpress-and-wp_redirect-function-problem
 		 *
 		 * @param $input
 		 *
 		 * @return mixed
 		 */
-		private function cpt_settings_redirect() {
+		public function cpt_settings_redirect() {
+			// check if save settings have been submitted and at least one cpt has been selected
 			if ( isset( $_GET['settings-updated'] ) && $_GET['settings-updated'] == true ) {
-				wp_redirect( admin_url( 'admin.php?page=cpt_auto_menu&tab=select_menu' ) );
-				exit;
-			} else {
-				//  Some errors were found, so let's output the header since we are staying on this page
-				if ( isset( $_GET['noheader'] ) ) {
-					require_once( ABSPATH . 'wp-admin/admin-header.php' );
+
+				// if no cpt selected echo error
+				//@TODO-bfp: error message shows in wrong place. Settings saved message should not appear.
+				if ( ! $this->get_selected_cpts() ) {
+					$html = '<div class="error"><p>';
+					$html .= __( 'You need to select at least one Custom Post Type', 'bfp-cpt-auto-menu' );
+					$html .= '</p></div>';
+					echo $html;
+				} else {
+					// otherwise safe to redirect to menu page
+					wp_redirect( admin_url( 'admin.php?page=cpt_auto_menu&tab=select_menu' ) );
+					exit;
 				}
+
 			}
 
 			return;
