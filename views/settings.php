@@ -7,6 +7,8 @@
  * @version 1.1.2
  *
  * @since   1.0.0
+ *
+ * @TODO-bfp: add styling to this page
  */
 ?>
 <div class="cpt-auto-menu-wrapper">
@@ -26,7 +28,7 @@
 
 		<?php
 		// if custom post type has been chosen display menu tab
-		if ( get_option( 'cpt_auto_menu_cpt_list' ) ) {
+		if ( $this->get_selected_cpts() ) {
 			?>
 
 			<a href="?page=cpt_auto_menu&tab=select_menu"

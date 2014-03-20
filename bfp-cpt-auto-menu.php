@@ -343,21 +343,26 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 
 				$main_menu = wp_get_nav_menu_object( $_POST['selected_menu'] );
 
-				// then extract the ID
-				$parent_menu_ID = (int) $main_menu->term_id;
+				// make sure there is a value then extract the ID
+				if ( true == $main_menu ) {
+					$parent_menu_ID = (int) $main_menu->term_id;
 
-				// get option if one exists
-				$parent_menu_item = $this->settings['parent_menu'];
 
-				$menu_items = wp_get_nav_menu_items( $parent_menu_ID, array( 'post_status' => 'publish' ) );
+					// get option if one exists
+					$parent_menu_item = $this->settings['parent_menu'];
 
-				foreach ( $menu_items as $menu_item ) {
-					// only display items in the root menu
-					if ( $menu_item->menu_item_parent != 0 ) {
-						continue;
+					$menu_items = wp_get_nav_menu_items( $parent_menu_ID, array( 'post_status' => 'publish' ) );
+
+					foreach ( $menu_items as $menu_item ) {
+						// only display items in the root menu
+						if ( $menu_item->menu_item_parent != 0 ) {
+							continue;
+						}
+						echo '<option value="' . $menu_item->title . '"' . selected( $this->settings['parent_menu'], $menu_item->title, false ) . '>' . ucfirst( $menu_item->title ) . '</option>';
 					}
-					echo '<option value="' . $menu_item->title . '"' . selected( $this->settings['parent_menu'], $menu_item->title, false ) . '>' . ucfirst( $menu_item->title ) . '</option>';
+
 				}
+
 			}
 		}
 
@@ -395,8 +400,8 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 		 * @return mixed
 		 */
 		private function get_cpt_settings( $cpt ) {
-			// make sure settings exist
-			if ( get_option( 'cpt_auto_menu_settings' ) ) {
+			// make sure settings exist and option is not empty
+			if ( get_option( 'cpt_auto_menu_settings' ) && ( true == get_option( 'cpt_auto_menu_settings' ) ) ) {
 
 				$settings = get_option( 'cpt_auto_menu_settings' );
 
@@ -872,9 +877,11 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 
 		/**
 		 * Callback from cpt settings.
-		 * @TODO-bfp: sanitize or validate or do something with this
+		 * @link    https://github.com/tommcfarlin/WordPress-Settings-Sandbox/blob/master/functions.php
 		 *
 		 * @since   1.1.0
+		 *
+		 * @version 1.1.3
 		 *
 		 * @param $input
 		 *
@@ -882,7 +889,17 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 		 */
 		public function cpt_settings_validation( $input ) {
 
-			return $input;
+			$output = array();
+
+			foreach ( $input as $key => $value ) {
+				// check to see if current option has value. If so, process it.
+				if ( isset ( $input[$key] ) ) {
+					// strip all HTML and PHP tags and properly handle quoted strings
+					$output[$key] = strip_tags( stripslashes( $input[$key] ) );
+				}
+			}
+
+			return apply_filters( 'cpt_settings_validation', $output, $input );
 		}
 
 
@@ -903,13 +920,14 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 			$menu_name_array   = $input['menu_name'];
 			$parent_name_array = $input['parent_name'];
 
-			$output = array();
+			$output = strip_tags( stripslashes( array() ) );
 
 			foreach ( $keys as $id => $key ) {
 				$output[$key] = array(
 					'cpt'         => $cpt_array[$id],
 					'menu_name'   => $menu_name_array[$id],
 					'parent_menu' => $parent_name_array[$id]
+
 				);
 			}
 
