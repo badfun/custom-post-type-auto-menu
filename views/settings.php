@@ -4,7 +4,7 @@
  * @link http://wp.tutsplus.com/tutorials/theme-development/the-complete-guide-to-the-wordpress-settings-api-part-5-tabbed-navigation-for-your-settings-page/
  * @link http://wordpress.stackexchange.com/questions/127493/wordpress-settings-api-implementing-tabs-on-custom-menu-page
  *
- * @version 1.1.2
+ * @version 1.1.3
  *
  * @since   1.0.0
  *

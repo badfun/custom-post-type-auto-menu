@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: custom post type, menus, auto menu
 Requires at least: 3.0.1
 Tested up to: 3.8
-Stable tag: 1.1.2
+Stable tag: 1.1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -53,6 +53,8 @@ There are other available solutions for that, but if there is demand I could inc
 = 1.1.3 =
 * Fixed bug that sometimes prevented page redirects and caused 'headers already sent' error
 * Improved error message for empty custom post type list
+* Fixed intermittent ajax bug
+* Added proper sanitization to callbacks
 
 = 1.1.2 =
 * Fixed translation strings to WordPress I18n standards

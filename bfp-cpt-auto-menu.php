@@ -914,7 +914,6 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 		 * @return array
 		 */
 		public function menu_settings_validation( $input ) {
-			//@TODO-bfp: still need to sanitize
 			$keys              = $input['id'];
 			$cpt_array         = $input['cpt'];
 			$menu_name_array   = $input['menu_name'];
