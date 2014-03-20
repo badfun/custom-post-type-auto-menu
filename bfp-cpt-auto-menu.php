@@ -827,10 +827,14 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 				// if no cpt selected echo error
 				//@TODO-bfp: error message shows in wrong place. Settings saved message should not appear.
 				if ( ! $this->get_selected_cpts() ) {
-					$html = '<div class="error"><p>';
-					$html .= __( 'You need to select at least one Custom Post Type', 'bfp-cpt-auto-menu' );
-					$html .= '</p></div>';
-					echo $html;
+
+						add_settings_error(
+							'cpt_error',
+							esc_attr( 'settings_updated' ),
+							__( 'You need to select at least one Custom Post Type', 'bfp-cpt-auto-menu' ),
+							'error'
+						);
+
 				} else {
 					// otherwise safe to redirect to menu page
 					wp_redirect( admin_url( 'admin.php?page=cpt_auto_menu&tab=select_menu' ) );
