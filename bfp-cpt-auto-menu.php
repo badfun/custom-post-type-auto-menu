@@ -3,7 +3,7 @@
 Plugin Name: Custom Post Type Auto Menu
 Plugin URI: https://github.com/badfun/custom-post-type-auto-menu
 Description: Automatically adds new custom post type posts to the chosen menu and parent item as a sub-menu item.
-Version: 1.1.2
+Version: 1.1.3
 Author: Ken Dirschl, Bad Fun Productions
 Author URI: http://badfunproductions.com
 Author Email: ken@badfunproductions.com
@@ -69,7 +69,7 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 		 *
 		 * @var     string
 		 */
-		protected $version = '1.1.2';
+		protected $version = '1.1.3';
 
 
 		/**
@@ -828,12 +828,12 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 				//@TODO-bfp: error message shows in wrong place. Settings saved message should not appear.
 				if ( ! $this->get_selected_cpts() ) {
 
-						add_settings_error(
-							'cpt_error',
-							esc_attr( 'settings_updated' ),
-							__( 'You need to select at least one Custom Post Type', 'bfp-cpt-auto-menu' ),
-							'error'
-						);
+					add_settings_error(
+						'cpt_error',
+						esc_attr( 'settings_updated' ),
+						__( 'You need to select at least one Custom Post Type', 'bfp-cpt-auto-menu' ),
+						'error'
+					);
 
 				} else {
 					// otherwise safe to redirect to menu page

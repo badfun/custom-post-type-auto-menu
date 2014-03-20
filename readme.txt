@@ -50,6 +50,10 @@ There are other available solutions for that, but if there is demand I could inc
 
 == Changelog ==
 
+= 1.1.3 =
+* Fixed bug that sometimes prevented page redirects and caused 'headers already sent' error
+* Improved error message for empty custom post type list
+
 = 1.1.2 =
 * Fixed translation strings to WordPress I18n standards
 * Formatted code to WordPress standards
