@@ -816,6 +816,10 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 		 *
 		 * @since 1.1.0
 		 *
+		 * @version 1.1.3
+		 *
+		 * @link: http://www.lessthanweb.com/blog/wordpress-and-wp_redirect-function-problem
+		 *
 		 * @param $input
 		 *
 		 * @return mixed
@@ -824,6 +828,11 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 			if ( isset( $_GET['settings-updated'] ) && $_GET['settings-updated'] == true ) {
 				wp_redirect( admin_url( 'admin.php?page=cpt_auto_menu&tab=select_menu' ) );
 				exit;
+			} else {
+				//  Some errors were found, so let's output the header since we are staying on this page
+				if ( isset( $_GET['noheader'] ) ) {
+					require_once( ABSPATH . 'wp-admin/admin-header.php' );
+				}
 			}
 
 			return;
