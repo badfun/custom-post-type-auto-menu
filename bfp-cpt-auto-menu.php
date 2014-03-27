@@ -817,17 +817,18 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 		 *
 		 * @since   1.1.0
 		 *
-		 * @version 1.1.3
+		 * @version 1.1.4
 		 *
 		 * @param $input
 		 *
 		 * @return mixed
 		 */
 		public function cpt_settings_redirect() {
-			// check if save settings have been submitted and at least one cpt has been selected
-			if ( isset( $_GET['settings-updated'] ) && $_GET['settings-updated'] == true ) {
 
-				// if no cpt selected echo error
+			//check if save settings have been submitted and we are on our page
+			if ( isset( $_GET['settings-updated'] ) && $_GET['page'] == 'cpt_auto_menu' && $_GET['settings-updated'] == true ) {
+
+				// if no cpt has been selected echo error
 				if ( ! $this->get_selected_cpts() ) {
 
 					add_settings_error(
