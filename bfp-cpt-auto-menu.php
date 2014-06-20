@@ -3,7 +3,7 @@
 Plugin Name: Custom Post Type Auto Menu
 Plugin URI: https://github.com/badfun/custom-post-type-auto-menu
 Description: Automatically adds new custom post type posts to the chosen menu and parent item as a sub-menu item.
-Version: 1.1.3
+Version: 1.1.4
 Author: Ken Dirschl, Bad Fun Productions
 Author URI: http://badfunproductions.com
 Author Email: ken@badfunproductions.com
@@ -429,11 +429,17 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 		 *
 		 * @since 1.1.0
 		 *
+		 * @version 1.1.4
+		 *
 		 * @return bool|string
 		 *
 		 */
 		private function get_current_cpt() {
 			$screen = get_current_screen();
+
+			if ( $screen == null ) {
+				return;
+			}
 
 			// if we are on our page do nothing
 			if ( $screen->id == $this->main_page ) {
@@ -817,18 +823,15 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 		 *
 		 * @since   1.1.0
 		 *
-		 * @version 1.1.4
-		 *
-		 * @param $input
+		 * @version 1.1.3
 		 *
 		 * @return mixed
 		 */
 		public function cpt_settings_redirect() {
+			// check if save settings have been submitted and at least one cpt has been selected
+			if ( isset( $_GET['settings-updated'] ) && $_GET['settings-updated'] == true ) {
 
-			//check if save settings have been submitted and we are on our page
-			if ( isset( $_GET['settings-updated'] ) && $_GET['page'] == 'cpt_auto_menu' && $_GET['settings-updated'] == true ) {
-
-				// if no cpt has been selected echo error
+				// if no cpt selected echo error
 				if ( ! $this->get_selected_cpts() ) {
 
 					add_settings_error(
@@ -961,6 +964,8 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 		 *
 		 * @since   1.0.0
 		 *
+		 * @version 1.1.4
+		 *
 		 * @param $post_id
 		 *
 		 * @TODO-bfp: remove menu item if exists for a draft. If user has published, and then makes a draft, menu item is not removed
@@ -1013,8 +1018,8 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 			}
 
 
-			// otherwise get title of current project
-			$new_project_title = get_the_title( $post->ID );
+			// otherwise get title of current project (decode entities to prevent problems with html characters)
+			$new_project_title = wp_kses_decode_entities( get_the_title( $post->ID ) );
 
 
 			// make sure title does not exist already and that it is not an auto-draft

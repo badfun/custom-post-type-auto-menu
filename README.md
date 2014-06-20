@@ -21,7 +21,7 @@ The plugin now supports multiple custom post types.
 ## Frequently Asked Questions
 
 1. How many custom post types can I use?
-The plugin now supports multiple custom post types
+The plugin now supports multiple custom post types. Use as many as you like.
 
 2. Can I create sub-sub menu items?
 Yes. But it requires a mod to the code and can lead to strange issues. I'll figure it out for future versions.
@@ -32,12 +32,17 @@ There are other available solutions for that, but if there is demand I could inc
 
 ## Known Issues
 
+* Ampersands and other HTML entites in titles can sometimes have curious results, such as multiple menu items.
 * After a custom post type post has been published, if it is downgraded to 'draft' the item stays in the menu.
 * Bulk trashing custom post types will leave the menu items behind.
 * Menu items can not have the same name, even if attached to different menus.
 
 
 ## Changelog
+
+= 1.1.4 =
+* Fixed current screen error that gave a php warning
+* Fixed editing error where titles with an ampersand would create multiple menu items
 
 = 1.1.3 =
 * Fixed bug that sometimes prevented page redirects and caused 'headers already sent' error

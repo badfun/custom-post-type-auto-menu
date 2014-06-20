@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: custom post type, menus, auto menu
 Requires at least: 3.0.1
 Tested up to: 3.9
-Stable tag: 1.1.3
+Stable tag: 1.1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,8 +19,6 @@ for sites that have a large number of custom post type additions, such as produc
 
 The plugin now supports multiple custom post types
 
-NOTE: If you were using the older version of the plugin you will need to re-do your settings!
-
 
 == Installation ==
 
@@ -33,7 +31,7 @@ NOTE: If you were using the older version of the plugin you will need to re-do y
 == Frequently Asked Questions ==
 
 = How many custom post types can I use? =
-The plugin now supports multiple custom post types
+The plugin now supports multiple custom post types. Use as many as you like.
 
 = Can I create sub-sub menu items? =
 Yes. But it requires a mod to the code and can lead to strange issues. I'll figure it out for future versions.
@@ -49,6 +47,10 @@ There are other available solutions for that, but if there is demand I could inc
 2. Menu Settings page. Choose which menu and which menu item the automated cpt post should appear in.
 
 == Changelog ==
+
+= 1.1.4 =
+* Fixed current screen error that gave a php warning
+* Fixed editing error where titles with an ampersand would create multiple menu items
 
 = 1.1.3 =
 * Fixed bug that sometimes prevented page redirects and caused 'headers already sent' error
@@ -88,8 +90,9 @@ the settings had to be changed completely to support multiple custom post types.
 
 == Known Issues ==
 
+* Ampersands and other HTML entites in titles can sometimes have curious results, such as multiple menu items.
 * After a custom post type post has been published, if it is downgraded to 'draft' the item stays in the menu.
-* Bulk trashing custom post types will leave the menu items behind.
+* Bulk trashing custom post types will leave the menu items behind. Trash custom post types one at a time and it works fine.
 * Menu items can not have the same name, even if attached to different menus.
 
 == Acknowledgements ==
