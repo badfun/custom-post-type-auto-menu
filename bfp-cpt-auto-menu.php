@@ -448,7 +448,15 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 
 			// otherwise get the current custom post type
 			$this->current_cpt = get_post_type();
+                        
+                        //bulk action issue. The url are different for bulk action, and quick edit. need to fetch the post type from REQUEST
+                          if (empty($this->current_cpt)) {
+                             if (isset($_REQUEST['post_type'])) {
 
+                           $this->current_cpt = $_REQUEST['post_type'];
+                           }
+                         }
+                         
 			return $this->current_cpt;
 		}
 
