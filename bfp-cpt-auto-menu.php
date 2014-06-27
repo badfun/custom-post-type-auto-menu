@@ -1010,7 +1010,8 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 
 			// extract list of titles from menu objects and populate array
 			foreach ( $current_menu_items as $current_menu_item ) {
-				$current_menu_titles[] = $current_menu_item->title;
+				//trim the title, fix: multiple menu item added when post title has a trailing space during edit.
+				$current_menu_titles[] = trim($current_menu_item->title);
 
 				// get the menu post object id from matching the current id to the object id in menu post object
 				// check if item is being trashed
