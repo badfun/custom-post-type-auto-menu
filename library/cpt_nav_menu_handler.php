@@ -261,11 +261,19 @@ class Cpt_Nav_Menu_Handler {
         return $this->current_menu_titles;
     }
 
+    public function clean_for_compare($text) {
+        $text = wp_kses_decode_entities($text);
+        $text = trim($text);
+        return $text;
+    }
+
     public function menu_item_already_exist() {
         $new_title = $this->get_new_item_title();
         $current_titles = $this->get_current_menu_titles();
+        $new_title = $this->clean_for_compare($new_title);
+        $current_titles = array_map(array($this, 'clean_for_compare'), $current_titles);
 
-
+        
         return in_array($new_title, $current_titles);
     }
 
