@@ -10,6 +10,8 @@ class Cpt_Nav_Menu_Handler {
     protected $new_post;
     protected $CPT;
     protected $cpt_settings;
+    protected $parent_menu_ID;
+    protected $cpt_settings_array = array();
 
     public function __construct($CPT) {
         $this->CPT = $CPT;
@@ -29,12 +31,16 @@ class Cpt_Nav_Menu_Handler {
      * @return int
      */
     private function get_parent_menu_ID() {
-        // first retrieve the object
+// first retrieve the object
+
+        if (isset($this->parent_menu_ID)) {
+            return $this->parent_menu_ID;
+        }
         $main_menu = wp_get_nav_menu_object($this->get_parent_menu_name());
 
-        // nav menu object returns false if there is no menu
+// nav menu object returns false if there is no menu
         if ($main_menu != false) {
-            // then extract the ID
+// then extract the ID
             $this->parent_menu_ID = (int) $main_menu->term_id;
 
             return $this->parent_menu_ID;
@@ -50,24 +56,32 @@ class Cpt_Nav_Menu_Handler {
      * @return mixed
      */
     private function get_cpt_settings($cpt) {
-        // make sure settings exist and option is not empty
+        $settings = $this->get_cpt_settings_array();
 
-        if (get_option('cpt_auto_menu_settings') && ( true == get_option('cpt_auto_menu_settings') )) {
+// loop through the main array for each sub array
+        foreach ($settings as $setting) {
+// loop through sub array
+            foreach ($setting as $key => $value) {
 
-            $settings = get_option('cpt_auto_menu_settings');
-
-            // loop through the main array for each sub array
-            foreach ($settings as $setting) {
-                // loop through sub array
-                foreach ($setting as $key => $value) {
-
-                    if ($value === $cpt) {
-                        return $setting;
-                        break;
-                    }
+                if ($value === $cpt) {
+                    return $setting;
+                    break;
                 }
             }
         }
+    }
+
+    protected function get_cpt_settings_array() {
+        if (!empty($this->cpt_settings_array)) {
+            return $this->cpt_settings_array;
+        }
+
+        if (get_option('cpt_auto_menu_settings') && ( true == get_option('cpt_auto_menu_settings') )) {
+
+            $this->cpt_settings_array = get_option('cpt_auto_menu_settings');
+        }
+
+        return $this->cpt_settings_array;
     }
 
     /**
@@ -82,7 +96,7 @@ class Cpt_Nav_Menu_Handler {
     private function get_parent_menu_name() {
         $cpt = $this->get_current_cpt();
 
-        // get the settings array for this cpt
+// get the settings array for this cpt
         $settings = $this->get_cpt_settings($cpt);
 
         if ($settings['menu_name'] != false) {
@@ -96,9 +110,9 @@ class Cpt_Nav_Menu_Handler {
     }
 
     private function get_parent_menu_item() {
-        // get current cpt
+// get current cpt
         $cpt = $this->get_current_cpt();
-        // get the settings array for this cpt
+// get the settings array for this cpt
         $settings = $this->get_cpt_settings($cpt);
 
         $this->parent_menu_item = $settings['parent_menu'];
@@ -115,22 +129,22 @@ class Cpt_Nav_Menu_Handler {
      * @return int
      */
     private function get_parent_menu_item_ID() {
-        // retrieve the list menu items
+// retrieve the list menu items
         $menu_items = wp_get_nav_menu_items($this->get_parent_menu_ID(), array('post_status' => 'publish'));
 
-        // wp_get_nav_menu_items returns false if there are no menu items
+// wp_get_nav_menu_items returns false if there are no menu items
         if ($menu_items == false) {
             return;
         }
 
-        // loop through each post object
+// loop through each post object
         foreach ($menu_items as $menu_item) {
-            // make sure it is top level only
+// make sure it is top level only
             if ($menu_item->menu_item_parent != 0) {
                 continue;
             }
 
-            // if menu item title matches user selected setting extract id
+// if menu item title matches user selected setting extract id
             if ($this->get_parent_menu_item() == $menu_item->title) {
                 $this->parent_menu_item_ID = $menu_item->ID;
             }
@@ -261,9 +275,15 @@ class Cpt_Nav_Menu_Handler {
         return $this->current_menu_titles;
     }
 
-    public function clean_for_compare($text) {
-        $text = wp_kses_decode_entities($text);
-        $text = trim($text);
+    public function clean_for_compare($text, $type = 'title') {
+
+        if (!apply_filters('ctp_auto_override_clean_compare', false, $type)) {
+            $text = wp_kses_decode_entities($text);
+            $text = trim($text);
+        }
+
+        $text = apply_filters('ctp_auto_clean_title', $text, $type);
+
         return $text;
     }
 
@@ -273,7 +293,7 @@ class Cpt_Nav_Menu_Handler {
         $new_title = $this->clean_for_compare($new_title);
         $current_titles = array_map(array($this, 'clean_for_compare'), $current_titles);
 
-        
+
         return in_array($new_title, $current_titles);
     }
 
