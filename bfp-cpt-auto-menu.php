@@ -626,29 +626,33 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          *
          * @since   1.1.0
          *
-         * @version 1.1.3
+         * @version 1.1.4
          *
          * @return mixed
          */
-        public function cpt_settings_redirect() {
-            // check if save settings have been submitted and at least one cpt has been selected
-            if (isset($_GET['settings-updated']) && $_GET['settings-updated'] == true) {
+		public function cpt_settings_redirect() {
+			// make sure we are saving settings only on our page
+			if ( isset( $_GET['page'] ) && $_GET['page'] == 'cpt_auto_menu' ) {
 
-                // if no cpt selected echo error
-                if (!$this->get_selected_cpts()) {
+				// check if save settings have been submitted and at least one cpt has been selected
+				if ( isset( $_GET['settings-updated'] ) && $_GET['settings-updated'] == true ) {
 
-                    add_settings_error(
-                            'cpt_error', esc_attr('settings_updated'), __('You need to select at least one Custom Post Type', 'bfp-cpt-auto-menu'), 'error'
-                    );
-                } else {
-                    // otherwise safe to redirect to menu page
-                    wp_redirect(admin_url('admin.php?page=cpt_auto_menu&tab=select_menu'));
-                    exit;
-                }
-            }
+					// if no cpt selected echo error
+					if ( ! $this->get_selected_cpts() ) {
 
-            return;
-        }
+						add_settings_error(
+							'cpt_error', esc_attr( 'settings_updated' ), __( 'You need to select at least one Custom Post Type', 'bfp-cpt-auto-menu' ), 'error'
+						);
+					} else {
+						// otherwise safe to redirect to menu page
+						wp_redirect( admin_url( 'admin.php?page=cpt_auto_menu&tab=select_menu' ) );
+						exit;
+					}
+				}
+			}
+
+			return;
+		}
 
         /**
          * Make sure we always land on a tab and not the base page.
@@ -757,8 +761,6 @@ if (!class_exists('Custom_Post_Type_Auto_Menu')) {
          *
          * @param $post_id
          *
-         * @TODO-bfp: remove menu item if exists for a draft. If user has published, and then makes a draft, menu item is not removed
-         * @TODO-bfp: bulk trashes do not work.
          */
         public function cpt_auto_menu_save($post_id) {
             // get the current post
