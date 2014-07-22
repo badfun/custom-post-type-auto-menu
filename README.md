@@ -7,7 +7,7 @@ Custom Post Type Auto Menu allows the user to choose a custom post type, a menu,
 will be added automatically. This is useful for simplifying things for clients who may not be comfortable adding items to menus. Or
 for sites that have a large number of custom post type additions, such as products.
 
-The plugin now supports multiple custom post types.
+The plugin is also available in the WordPress plugin repository: http://wordpress.org/plugins/custom-post-type-auto-menu/
 
 
 ## Installation
@@ -33,12 +33,15 @@ There are other available solutions for that, but if there is demand I could inc
 ## Known Issues
 
 * Ampersands and other HTML entites in titles can sometimes have curious results, such as multiple menu items.
-* After a custom post type post has been published, if it is downgraded to 'draft' the item stays in the menu.
-* Bulk trashing custom post types will leave the menu items behind.
 * Menu items can not have the same name, even if attached to different menus.
 
 
 ## Changelog
+
+= 1.1.5 =
+* Fixed bulk trash error
+* Fixed publish to draft error
+* Broke up main function into new class
 
 = 1.1.4 =
 * Fixed current screen error that gave a php warning
@@ -74,6 +77,7 @@ There are other available solutions for that, but if there is demand I could inc
 
 ## Acknowledgements
 
+* Many thanks to [codbox] (https://github.com/codbox) for the bug fixes and a whole lot more. Much appreciated!
 * Thanks to Andrew Kurtis of [WebHostingHub](http://www.webhostinghub.com/) for the Spanish translation
 * There are various urls in the code from developers whose solutions I used to solve problems. Thanks everyone!
 
