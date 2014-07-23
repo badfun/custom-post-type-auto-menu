@@ -125,7 +125,6 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 		 * @var string
 		 */
 		private $parent_menu;
-		private $parent_menu_ID;
 		private $parent_menu_item;
 		private $parent_menu_item_ID;
 		private $current_cpt;

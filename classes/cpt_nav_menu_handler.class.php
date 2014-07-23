@@ -3,6 +3,13 @@ defined( 'ABSPATH' ) or die( "None Shall Pass" );
 
 class Cpt_Nav_Menu_Handler {
 
+	/**
+	 * Properties
+	 *
+	 * @since 1.5.5
+	 *
+	 * @var
+	 */
 	protected $current_post_type;
 	protected $current_menu_items = null;
 	protected $current_post_menu_item;
@@ -231,16 +238,13 @@ class Cpt_Nav_Menu_Handler {
 	 * @return bool
 	 */
 	public function should_process_post_type() {
-		if ( class_exists( 'CCTM' ) ) {
-			$post_types = CCTM::get_post_types();
-		} else {
-			$args       = $args = array(
-				'public'   => true,
-				'_builtin' => false
-			);
-			$post_types = array_keys( get_post_types( $args ) );
-		}
-		$new_post = $this->get_new_post();
+
+		$args       = $args = array(
+			'public'   => true,
+			'_builtin' => false
+		);
+		$post_types = array_keys( get_post_types( $args ) );
+		$new_post   = $this->get_new_post();
 		if ( in_array( trim( $new_post->post_type ), $post_types ) ) {
 			return true;
 		}
