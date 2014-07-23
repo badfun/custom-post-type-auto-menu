@@ -38,8 +38,11 @@ There are other available solutions for that, but if there is demand I could inc
 
 ## Changelog
 
+= 1.1.7 =
+* SVN did not upload the new classes directory. Going to re-do the whole commit
+
 = 1.1.6 =
-* using plugin_dir_path( __FILE__ ) causing error on some installs. Going to straight include
+* some kind of SVN error. Attempted fix.
 
 = 1.1.5 =
 * Fixed bulk trash error
@@ -80,7 +83,7 @@ There are other available solutions for that, but if there is demand I could inc
 
 ## Acknowledgements
 
-* Many thanks to [codbox] (https://github.com/codbox) for the bug fixes and a whole lot more. Much appreciated!
+* Many thanks to [codbox](https://github.com/codbox) for the bug fixes and the new class. Much appreciated!
 * Thanks to Andrew Kurtis of [WebHostingHub](http://www.webhostinghub.com/) for the Spanish translation
 * There are various urls in the code from developers whose solutions I used to solve problems. Thanks everyone!
 

@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( "None Shall Pass" );
+defined( 'ABSPATH' ) or die( 'You do not have the required permissions' );
 
 class Cpt_Nav_Menu_Handler {
 
