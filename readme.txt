@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: custom post type, menus, auto menu
 Requires at least: 3.0.1
 Tested up to: 3.9
-Stable tag: 1.1.5
+Stable tag: 1.1.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,9 @@ There are other available solutions for that, but if there is demand I could inc
 2. Menu Settings page. Choose which menu and which menu item the automated cpt post should appear in.
 
 == Changelog ==
+
+= 1.1.6 =
+* using plugin_dir_path( __FILE__ ) causing error on some installs. Going to straight include
 
 = 1.1.5 =
 * Fixed bulk trash error
@@ -102,7 +105,7 @@ the settings had to be changed completely to support multiple custom post types.
 
 == Acknowledgements ==
 
-* Many thanks to [codbox] (https://github.com/codbox) for the bug fixes and a whole lot more. Much appreciated!
+* Many thanks to [codbox](https://github.com/codbox) for the bug fixes and a whole lot more. Much appreciated!
 * Thanks to Andrew Kurtis of [WebHostingHub](http://www.webhostinghub.com/) for the Spanish translation
 * There are various urls in the code from developers whose solutions I used to solve problems. Thanks everyone!
 

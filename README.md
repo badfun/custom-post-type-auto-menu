@@ -38,6 +38,9 @@ There are other available solutions for that, but if there is demand I could inc
 
 ## Changelog
 
+= 1.1.6 =
+* using plugin_dir_path( __FILE__ ) causing error on some installs. Going to straight include
+
 = 1.1.5 =
 * Fixed bulk trash error
 * Fixed publish to draft error
