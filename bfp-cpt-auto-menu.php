@@ -719,12 +719,12 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 			$menu_name_array   = $input['menu_name'];
 			$parent_name_array = $input['parent_name'];
 
-			$output = strip_tags( stripslashes( array() ) );
+			$output = array();
 
 			foreach ( $keys as $id => $key ) {
 				$output[$key] = array(
 					'cpt'         => $cpt_array[$id],
-					'menu_name'   => $menu_name_array[$id],
+					'menu_name'   => strip_tags( stripslashes( $menu_name_array[$id] ) ),
 					'parent_menu' => $parent_name_array[$id]
 				);
 			}
