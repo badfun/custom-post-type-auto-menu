@@ -692,7 +692,7 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 
 			$output = array();
 
-			foreach ( $input as $key => $value ) {
+			foreach ( (array)$input as $key => $value ) {
 				// check to see if current option has value. If so, process it.
 				if ( isset( $input[$key] ) ) {
 					// strip all HTML and PHP tags and properly handle quoted strings
