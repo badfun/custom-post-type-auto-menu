@@ -38,6 +38,9 @@ There are other available solutions for that, but if there is demand I could inc
 
 ## Changelog
 
+= 1.1.8 =
+* A few small bug tweaks
+
 = 1.1.7 =
 * SVN did not upload the new classes directory. Going to re-do the whole commit
 
