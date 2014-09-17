@@ -3,8 +3,8 @@ Contributors: badfun
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=UYCUSEFX8Q89C
 Tags: custom post type, menus, auto menu
 Requires at least: 3.0.1
-Tested up to: 3.9
-Stable tag: 1.1.7
+Tested up to: 4.0
+Stable tag: 1.1.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
