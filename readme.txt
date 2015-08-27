@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: custom post type, menus, auto menu
 Requires at least: 3.0.1
 Tested up to: 4.3
-Stable tag: 1.1.8
+Stable tag: 1.1.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -39,7 +39,9 @@ Yes. But it requires a mod to the code and can lead to strange issues. I'll figu
 = What about categories and pages? =
 There are other available solutions for that, but if there is demand I could incorporate it in future releases.
 
-
+= Can I add existing custom post type posts to the menu? =
+Some users have many existing cpt's and want to change them to a new menu. This can be done by selecting all your custom post types
+and setting them to 'draft' status, then back to 'publish'. The plugin will detect them as new, and they will be added.
 
 == Screenshots ==
 
@@ -47,6 +49,9 @@ There are other available solutions for that, but if there is demand I could inc
 2. Menu Settings page. Choose which menu and which menu item the automated cpt post should appear in.
 
 == Changelog ==
+
+= 1.1.9 =
+* very minor version changes and a new deploy test
 
 = 1.1.8 =
 * A few small bug tweaks

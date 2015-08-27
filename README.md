@@ -29,6 +29,9 @@ Yes. But it requires a mod to the code and can lead to strange issues. I'll figu
 3. What about categories and pages?
 There are other available solutions for that, but if there is demand I could incorporate it in future releases.
 
+4. Can I add existing custom post type posts to the menu?
+Some users have many existing cpt's and want to change them to a new menu. This can be done by selecting all your custom post types
+and setting them to 'draft' status, then back to 'publish'. The plugin will detect them as new, and they will be added.
 
 ## Known Issues
 
@@ -38,6 +41,8 @@ There are other available solutions for that, but if there is demand I could inc
 
 ## Changelog
 
+= 1.1.9 =
+* very minor version changes and a new deploy test
 = 1.1.8 =
 * A few small bug tweaks
 
