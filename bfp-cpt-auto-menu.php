@@ -364,6 +364,8 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 		 * Get the settings for the CPT's saved in options. This way it is a single call to database
 		 * @link http://stackoverflow.com/questions/8102221/php-multidimensional-array-searching-find-key-by-specific-value
 		 *
+		 * @since 1.1.0
+		 *
 		 * @param $cpt
 		 *
 		 * @return mixed

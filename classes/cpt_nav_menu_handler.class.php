@@ -6,7 +6,7 @@ class Cpt_Nav_Menu_Handler {
 	/**
 	 * Properties
 	 *
-	 * @since 1.5.5
+	 * @since 1.1.5
 	 *
 	 * @var
 	 */
@@ -16,7 +16,7 @@ class Cpt_Nav_Menu_Handler {
 	protected $current_menu_titles;
 	protected $new_post_id;
 	protected $new_post;
-	protected $CPT;
+	protected $cpt;
 	protected $cpt_settings;
 	protected $parent_menu_ID;
 	protected $cpt_settings_array = array();
@@ -26,10 +26,10 @@ class Cpt_Nav_Menu_Handler {
 	 *
 	 * @since 1.1.5
 	 *
-	 * @param $CPT
+	 * @param $cpt
 	 */
-	public function __construct( $CPT ) {
-		$this->CPT = $CPT;
+	public function __construct( $cpt ) {
+		$this->cpt = $cpt;
 
 		add_action( 'transition_post_status', array( $this, 'transition_post_status' ), 10, 3 );
 	}
@@ -72,6 +72,8 @@ class Cpt_Nav_Menu_Handler {
 	/**
 	 * Get the settings for the CPT's saved in options. This way it is a single call to database
 	 * @link http://stackoverflow.com/questions/8102221/php-multidimensional-array-searching-find-key-by-specific-value
+	 *
+	 * @since 1.1.0
 	 *
 	 * @param $cpt
 	 *
@@ -171,7 +173,7 @@ class Cpt_Nav_Menu_Handler {
 
 		// wp_get_nav_menu_items returns false if there are no menu items
 		if ( $menu_items == false ) {
-			return;
+			return false;
 		}
 
 		// loop through each post object
