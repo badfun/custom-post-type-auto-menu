@@ -94,9 +94,11 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 			// load text domain for internationalization
 			add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
 
-			// test for nav menus
+			// test for nav menus & public post types
+			// @TODO-bfp: get these notices to display on our settings page only
 			add_action( 'admin_notices', array( $this, 'test_for_nav_menu_support' ) );
 			add_action( 'admin_notices', array( $this, 'test_for_nav_menu' ) );
+			add_action( 'admin_notices', array( $this, 'test_for_public_post_types' ) );
 
 			$this->nav_menu_handler = new Cpt_Nav_Menu_Handler( $this );
 
@@ -170,7 +172,10 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 		 */
 		public function add_admin_menu_page() {
 			$this->main_page = add_menu_page(
-				__( 'CPT Auto Menu Settings', 'bfp-cpt-auto-menu' ), __( 'CPT Auto Menu', 'bfp-cpt-auto-menu' ), 'manage_options', 'cpt_auto_menu', array( &$this, 'plugin_settings_page' ), 'dashicons-screenoptions'
+				__( 'CPT Auto Menu Settings', 'bfp-cpt-auto-menu' ), __( 'CPT Auto Menu', 'bfp-cpt-auto-menu' ), 'manage_options', 'cpt_auto_menu', array(
+				&$this,
+				'plugin_settings_page'
+			), 'dashicons-screenoptions'
 			);
 
 			add_action( 'load-' . $this->main_page, array( $this, 'load_admin_js' ) );
@@ -244,6 +249,7 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 
 		/**
 		 * Test for Nav Menu Support. If theme does not support menus output admin error notice
+		 * @version 1.1.9
 		 *
 		 * @since 1.0.0
 		 *
@@ -251,8 +257,10 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 		 *
 		 */
 		public function test_for_nav_menu_support() {
+			// only display error on our option page
+			$current_screen = get_current_screen();
 
-			if ( ! current_theme_supports( 'menus' ) ) {
+			if ( ! current_theme_supports( 'menus' ) && $current_screen->parent_base == 'cpt_auto_menu' ) {
 				$html = '<div class="error"><p>';
 				$html .= __( 'Your theme does not support custom navigation menus. The plugin requires themes built for at least WordPress 3.0', 'bfp-cpt-auto-menu' );
 				$html .= '</p></div>';
@@ -266,19 +274,22 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 
 		/**
 		 * Test that a Nav Menu has been setup, otherwise output admin error notice
+		 * @version 1.1.9
 		 *
 		 * @since 1.0.0
 		 *
 		 * @return bool
 		 */
 		public function test_for_nav_menu() {
+			// only display error on our option page
+			$current_screen = get_current_screen();
 
 			// if theme does not support menus don't need to show this message as well
 			if ( current_theme_supports( 'menus' ) ) {
 
 				$menus = wp_get_nav_menus();
 
-				if ( empty( $menus ) ) {
+				if ( empty( $menus ) && $current_screen->parent_base == 'cpt_auto_menu' ) {
 					$html = '<div class="error"><p>';
 					$html .= __( 'You do not have any menus setup with your theme. You need to create a menu to use this plugin.', 'bfp-cpt-auto-menu' );
 					$html .= '</p></div>';
@@ -288,6 +299,25 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 
 				// otherwise return true
 				return true;
+			}
+		}
+
+		/**
+		 * Test that custom post types exist and that they have been set to 'public'
+		 *
+		 * @since 1.1.9
+		 */
+		public function test_for_public_post_types() {
+
+			// only display error on our option page
+			$current_screen = get_current_screen();
+
+			if ( false == $this->get_custom_post_type_names() && $current_screen->parent_base == 'cpt_auto_menu' ) {
+				$html = '<div class="error"><p>';
+				$html .= __( 'There are no custom post types available. Custom post types need to be registered and set to public', 'bfp-cpt-auto-menu' );
+				$html .= '</p></div>';
+
+				echo $html;
 			}
 		}
 
@@ -340,15 +370,19 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 
 		/**
 		 * Get all custom post types as names and put in an array for later access
+		 * @version 1.1.9
 		 *
 		 * @since 1.1.0
 		 *
 		 * @return array
+		 *
+		 * @TODO-bfp: test the new 'show in nav menus functionality'
 		 */
 		private function get_custom_post_type_names() {
 			$args = array(
-				'public'   => true,
-				'_builtin' => false
+				'public'            => true,
+				'_builtin'          => false,
+				'show_in_nav_menus' => true
 			);
 
 			// note: $output and $operator are defaults but here for readability
@@ -426,8 +460,14 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 
 
 			// register the settings
-			register_setting( 'select_cpt_settings', 'cpt_auto_menu_cpt_list', array( &$this, 'cpt_settings_validation' ) );
-			register_setting( 'select_menu_settings', 'cpt_auto_menu_settings', array( &$this, 'menu_settings_validation' ) );
+			register_setting( 'select_cpt_settings', 'cpt_auto_menu_cpt_list', array(
+				&$this,
+				'cpt_settings_validation'
+			) );
+			register_setting( 'select_menu_settings', 'cpt_auto_menu_settings', array(
+				&$this,
+				'menu_settings_validation'
+			) );
 
 			/*
 			 * Sections
@@ -435,12 +475,18 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 
 			// Select custom post type(s) section
 			add_settings_section(
-				'select_cpt_section', __( 'Custom Post Type Settings', 'bfp-cpt-auto-menu' ), array( &$this, 'select_cpt_section' ), 'select_cpt_settings'
+				'select_cpt_section', __( 'Custom Post Type Settings', 'bfp-cpt-auto-menu' ), array(
+				&$this,
+				'select_cpt_section'
+			), 'select_cpt_settings'
 			);
 
 			// Select menu and menu parent item section
 			add_settings_section(
-				'select_menu_section', __( 'Menu and Parent Menu Item Settings', 'bfp-cpt-auto-menu' ), array( &$this, 'select_menu_section' ), 'select_menu_settings'
+				'select_menu_section', __( 'Menu and Parent Menu Item Settings', 'bfp-cpt-auto-menu' ), array(
+				&$this,
+				'select_menu_section'
+			), 'select_menu_settings'
 			);
 
 			/*
@@ -449,13 +495,19 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 
 			// select custom post types checkbox menu
 			add_settings_field(
-				'cpt_auto_menu-select_cpts', __( 'Available Custom Post Types', 'bfp-cpt-auto-menu' ), array( &$this, 'settings_field_select_cpts' ), 'select_cpt_settings', 'select_cpt_section', array()
+				'cpt_auto_menu-select_cpts', __( 'Available Custom Post Types', 'bfp-cpt-auto-menu' ), array(
+				&$this,
+				'settings_field_select_cpts'
+			), 'select_cpt_settings', 'select_cpt_section', array()
 			);
 
 
 			// select menu and parent menu item
 			add_settings_field(
-				'cpt_auto_menu-select_menus', __( 'Select Menu and Parent Menu Item', 'bfp-cpt-auto-menu' ), array( &$this, 'settings_field_select_menus' ), 'select_menu_settings', 'select_menu_section', array()
+				'cpt_auto_menu-select_menus', __( 'Select Menu and Parent Menu Item', 'bfp-cpt-auto-menu' ), array(
+				&$this,
+				'settings_field_select_menus'
+			), 'select_menu_settings', 'select_menu_section', array()
 			);
 
 			// add our registered stylesheet
@@ -694,11 +746,11 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 
 			$output = array();
 
-			foreach ( (array)$input as $key => $value ) {
+			foreach ( (array) $input as $key => $value ) {
 				// check to see if current option has value. If so, process it.
-				if ( isset( $input[$key] ) ) {
+				if ( isset( $input[ $key ] ) ) {
 					// strip all HTML and PHP tags and properly handle quoted strings
-					$output[$key] = strip_tags( stripslashes( $input[$key] ) );
+					$output[ $key ] = strip_tags( stripslashes( $input[ $key ] ) );
 				}
 			}
 
@@ -724,10 +776,10 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 			$output = array();
 
 			foreach ( $keys as $id => $key ) {
-				$output[$key] = array(
-					'cpt'         => $cpt_array[$id],
-					'menu_name'   => strip_tags( stripslashes( $menu_name_array[$id] ) ),
-					'parent_menu' => $parent_name_array[$id]
+				$output[ $key ] = array(
+					'cpt'         => $cpt_array[ $id ],
+					'menu_name'   => strip_tags( stripslashes( $menu_name_array[ $id ] ) ),
+					'parent_menu' => $parent_name_array[ $id ]
 				);
 			}
 
