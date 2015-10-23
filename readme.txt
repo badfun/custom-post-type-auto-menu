@@ -43,12 +43,20 @@ There are other available solutions for that, but if there is demand I could inc
 Some users have many existing cpt's and want to change them to a new menu. This can be done by selecting all your custom post types
 and setting them to 'draft' status, then back to 'publish'. The plugin will detect them as new, and they will be added.
 
+= Why do post types have to be public? =
+Custom post types must be set to public for the plugin to see them. This is because one of the assumptions of not setting a post type
+to public is that 'show_in_nav_menus' will be false. Obviously this is not the desired outcome of a plugin that automatically adds items
+to a menu.
+
 == Screenshots ==
 
 1. Custom Post Type Settings page. Choose at least one.
 2. Menu Settings page. Choose which menu and which menu item the automated cpt post should appear in.
 
 == Changelog ==
+
+= 1.2.0 =
+* test for public post types and give warning if not set. Removed deprecated screen icon function.
 
 = 1.1.9 =
 * very minor version changes and a new deploy test
