@@ -106,6 +106,7 @@ to a menu.
 
 ## Acknowledgements
 
+* Thanks to all who have made suggestions for features to this plugin. I will try to put aside some time to work on it.
 * Many thanks to [codbox](https://github.com/codbox) for the bug fixes and the new class. Much appreciated!
 * Thanks to Andrew Kurtis of [WebHostingHub](http://www.webhostinghub.com/) for the Spanish translation
 * There are various urls in the code from developers whose solutions I used to solve problems. Thanks everyone!
