@@ -24,7 +24,7 @@ The plugin is also available in the WordPress plugin repository: http://wordpres
 The plugin now supports multiple custom post types. Use as many as you like.
 
 2. Can I create sub-sub menu items?
-Yes. But it requires a mod to the code and can lead to strange issues. I'll figure it out for future versions.
+Yes. Well no. It requires a mod to the code and can lead to strange issues. I'll figure it out for future versions.
 
 3. What about categories and pages?
 There are other available solutions for that, but if there is demand I could incorporate it in future releases.
@@ -41,10 +41,16 @@ to a menu.
 ## Known Issues
 
 * Ampersands and other HTML entites in titles can sometimes have curious results, such as multiple menu items.
+* After a custom post type post has been published, if it is downgraded to 'draft' the item stays in the menu.
+* Bulk trashing custom post types will leave the menu items behind. Trash custom post types one at a time and it works fine.
 * Menu items can not have the same name, even if attached to different menus.
+* Known to conflict with Anything Order plugin: https://wordpress.org/plugins/anything-order/
 
 
 ## Changelog
+
+= 1.2.1 =
+* tested with WP 4.9 on multisite
 
 = 1.2.0 =
 * test for public post types and give warning if not set. Removed deprecated screen icon function.

@@ -3,8 +3,8 @@ Contributors: badfun
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=UYCUSEFX8Q89C
 Tags: custom post type, menus, auto menu
 Requires at least: 3.0.1
-Tested up to: 4.3
-Stable tag: 1.2.0
+Tested up to: 4.9
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,7 +34,7 @@ The plugin supports multiple custom post types.
 The plugin now supports multiple custom post types. Use as many as you like.
 
 = Can I create sub-sub menu items? =
-Yes. But it requires a mod to the code and can lead to strange issues. I'll figure it out for future versions.
+Yes. Well no. It requires a mod to the code and can lead to strange issues. I'll figure it out for future versions.
 
 = What about categories and pages? =
 There are other available solutions for that, but if there is demand I could incorporate it in future releases.
@@ -54,6 +54,9 @@ to a menu.
 2. Menu Settings page. Choose which menu and which menu item the automated cpt post should appear in.
 
 == Changelog ==
+
+= 1.2.1 =
+* tested with WP 4.9 on multisite
 
 = 1.2.0 =
 * test for public post types and give warning if not set. Removed deprecated screen icon function.
@@ -121,6 +124,7 @@ the settings had to be changed completely to support multiple custom post types.
 * After a custom post type post has been published, if it is downgraded to 'draft' the item stays in the menu.
 * Bulk trashing custom post types will leave the menu items behind. Trash custom post types one at a time and it works fine.
 * Menu items can not have the same name, even if attached to different menus.
+* Known to conflict with Anything Order plugin: https://wordpress.org/plugins/anything-order/
 
 == Acknowledgements ==
 
