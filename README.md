@@ -48,6 +48,8 @@ to a menu.
 
 
 ## Changelog
+= 1.2.2 =
+* tested with WP 5.0
 
 = 1.2.1 =
 * tested with WP 4.9 on multisite

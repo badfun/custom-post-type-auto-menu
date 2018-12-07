@@ -3,7 +3,7 @@
   Plugin Name: Custom Post Type Auto Menu
   Plugin URI: https://github.com/badfun/custom-post-type-auto-menu
   Description: Automatically adds new custom post type posts to the chosen menu and parent item as a sub-menu item.
-  Version: 1.2.1
+  Version: 1.2.2
   Author: Ken Dirschl, Bad Fun Productions
   Author URI: http://badfunproductions.com
   Author Email: ken@badfunproductions.com
@@ -12,7 +12,7 @@
 
   License:
 
-  Copyright 2015 Bad Fun Productions
+  Copyright 2018 Bad Fun Productions
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License, version 2, as
@@ -70,7 +70,7 @@ if ( ! class_exists( 'Custom_Post_Type_Auto_Menu' ) ) {
 		 *
 		 * @var     string
 		 */
-		protected $version = '1.2.1';
+		protected $version = '1.2.2';
 
 		/**
 		 * Unique identifier for your plugin.

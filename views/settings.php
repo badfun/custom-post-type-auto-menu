@@ -66,8 +66,5 @@
 		<?php esc_html_e( 'by', 'bfp-cpt-auto-menu' ); ?>
 		<a href="http://badfunproductions.com" target="_blank">Bad Fun Productions</a> -
 		<a href="https://github.com/badfun/custom-post-type-auto-menu"
-		   target="_blank"><?php esc_html_e( 'Please Report Bugs', 'bfp-cpt-auto-menu' ); ?></a> &middot;
-		<?php esc_html_e( 'Follow on Twitter:', 'bfp-cpt-auto-menu' ); ?>
-		<a href="http://twitter.com/badfunpro" target="_blank">BadFun Productions</a></p>
-
+		   target="_blank"><?php esc_html_e( 'Please Report Bugs', 'bfp-cpt-auto-menu' ); ?></a></p>
 </div>
