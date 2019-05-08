@@ -48,6 +48,9 @@ to a menu.
 
 
 ## Changelog
+= 1.2.3 =
+* tested with WP 5.2
+
 = 1.2.2 =
 * tested with WP 5.0
 
