@@ -1,18 +1,38 @@
 /* all rules are in class 'cpt-auto-menu-wrapper' to avoid conflicts */
-
-.cpt-auto-menu-wrapper {
-  padding: 20px;
+.cpt-auto-menu-page-wrapper {
+    /*padding-bottom: 10em;*/
+    min-height: calc(100vh - 200px);
 }
 
-.cpt-auto-menu-wrapper .cpt-heading {
+.cpt-auto-menu-page-wrapper .cpt-heading {
     display: inline;
     padding-right: 20px;
 }
 
-.cpt-auto-menu-wrapper .nav-tab {
+.cpt-auto-menu-page-wrapper .nav-tab {
     padding: 5px 20px 5px 20px;
 }
 
-.cpt-auto-menu-wrapper td, select.menu_name, select.parent_name {
+.cpt-auto-menu-page-wrapper td, select.menu_name, select.parent_name {
     margin-bottom: 1em;
+}
+
+.cpt-auto-menu-footer-wrapper {
+    margin-left: -20px;
+    background: #23282d;
+    height: 80px;
+}
+
+.cpt-auto-menu-footer-wrapper .content {
+    margin-bottom: 20px;
+    padding: 20px;
+    color: white;
+}
+
+.cpt-auto-menu-footer-wrapper .content a {
+    color: orange;
+}
+
+.cpt-auto-menu-footer-wrapper .content a:hover {
+    color: white;
 }

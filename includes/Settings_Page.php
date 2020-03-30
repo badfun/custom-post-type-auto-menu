@@ -13,7 +13,7 @@ namespace BFP\CptAutoMenu;
 
 defined( 'ABSPATH' ) or die( 'You do not have the required permissions' );
 
-if( ! class_exists('Settings_Page')){
+if ( ! class_exists( 'Settings_Page' ) ) {
 
 	class Settings_Page {
 
@@ -49,11 +49,11 @@ if( ! class_exists('Settings_Page')){
 
 		/**
 		 * Test for Nav Menu Support. If theme does not support menus output admin error notice
-		 * @version 1.1.9
+		 * @return bool
 		 *
 		 * @since 1.0.0
 		 *
-		 * @return bool
+		 * @version 1.1.9
 		 *
 		 */
 		public function test_for_nav_menu_support() {
@@ -74,11 +74,11 @@ if( ! class_exists('Settings_Page')){
 
 		/**
 		 * Test that a Nav Menu has been setup, otherwise output admin error notice
-		 * @version 1.1.9
-		 *
+		 * @return bool
 		 * @since 1.0.0
 		 *
-		 * @return bool
+		 * @version 1.1.9
+		 *
 		 */
 		public function test_for_nav_menu() {
 			// only display error on our option page
@@ -96,6 +96,7 @@ if( ! class_exists('Settings_Page')){
 
 					echo $html;
 				}
+
 				// otherwise return true
 				return;
 			}
@@ -170,13 +171,13 @@ if( ! class_exists('Settings_Page')){
 
 		/**
 		 * Get all custom post types as names and put in an array for later access
-		 * @version 1.1.9
-		 *
-		 * @since 1.1.0
-		 *
 		 * @return array
 		 *
 		 * @TODO-bfp: test the new 'show in nav menus functionality'
+		 * @since 1.1.0
+		 *
+		 * @version 1.1.9
+		 *
 		 */
 		private function get_custom_post_type_names() {
 			$args = array(
@@ -225,9 +226,9 @@ if( ! class_exists('Settings_Page')){
 		/**
 		 * Get selected custom post types saved in options or create empty array
 		 *
+		 * @return array|mixed|void
 		 * @since 1.1.0
 		 *
-		 * @return array|mixed|void
 		 */
 		public function get_selected_cpts() {
 			if ( get_option( 'cpt_auto_menu_cpt_list' ) ) {
@@ -383,9 +384,9 @@ if( ! class_exists('Settings_Page')){
 			// get list of menus
 			//@TODO-bfp: may need to lowercase results
 			$menus = get_terms( array(
-				'taxonomy' => 'nav_menu',
+				'taxonomy'   => 'nav_menu',
 				'hide_empty' => false
-			));
+			) );
 
 			$html = '<select class="menu_name" name="cpt_auto_menu_settings[menu_name][]">';
 			$html .= '<option value="default" class="highlight">' . $text . '</option>';
@@ -425,7 +426,7 @@ if( ! class_exists('Settings_Page')){
 
 				// get option if one exists
 				$parent_menu_item = $this->settings['parent_menu'];
-				$menu_items = wp_get_nav_menu_items( $parent_menu_ID, array( 'post_status' => 'publish' ) );
+				$menu_items       = wp_get_nav_menu_items( $parent_menu_ID, array( 'post_status' => 'publish' ) );
 
 				foreach ( $menu_items as $menu_item ) {
 					// only display items in the root menu
@@ -474,11 +475,11 @@ if( ! class_exists('Settings_Page')){
 		/**
 		 * Callback to redirect to Menu Settings tab after saving CPT settings. Hooked in Settings Section callback
 		 *
-		 * @since   1.1.0
-		 *
+		 * @return mixed
 		 * @version 1.1.4
 		 *
-		 * @return mixed
+		 * @since   1.1.0
+		 *
 		 */
 		public function cpt_settings_redirect() {
 			// make sure we are saving settings only on our page
@@ -503,7 +504,6 @@ if( ! class_exists('Settings_Page')){
 
 			return;
 		}
-
 
 
 		/**
@@ -563,15 +563,14 @@ if( ! class_exists('Settings_Page')){
 		}
 
 
-
 		/**
 		 * Create Nav Menu Items from new Custom Post Type
 		 *
-		 * @since   1.0.0
+		 * @param $post_id
 		 *
 		 * @version 1.1.4
 		 *
-		 * @param $post_id
+		 * @since   1.0.0
 		 *
 		 */
 		public function cpt_auto_menu_save( $post_id ) {

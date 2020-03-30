@@ -11,7 +11,7 @@
  * @TODO-bfp: add styling to this page
  */
 ?>
-<div class="cpt-auto-menu-wrapper">
+<div class="cpt-auto-menu-page-wrapper">
 
     <h2><?php esc_html_e( 'Custom Post Type Auto Menu', 'bfp-cpt-auto-menu' ); ?></h2>
 
@@ -53,19 +53,16 @@
 
 		<?php @submit_button( __( 'Save Settings', 'bfp-cpt-auto-menu' ) ); ?>
     </form>
-
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-
-    <hr/>
-    <p><a target="_blank" href="http://wordpress.org/plugins/custom-post-type-auto-menu/">
-			<?php esc_html_e( 'Custom Post Type Auto Menu', 'bfp-cpt-auto-menu' ); ?></a>
-		<?php esc_html_e( 'version', 'bfp-cpt-auto-menu' );
-		echo ' ' . $this->version; ?>
-		<?php esc_html_e( 'by', 'bfp-cpt-auto-menu' ); ?>
-        <a href="http://badfunproductions.com" target="_blank">Bad Fun Productions</a> -
-        <a href="https://wordpress.org/support/plugin/custom-post-type-auto-menu/"
-           target="_blank"><?php esc_html_e( 'Support', 'bfp-cpt-auto-menu' ); ?></a></p>
+</div>
+<div class="cpt-auto-menu-footer-wrapper">
+    <div class="content">
+        <p><a target="_blank" href="http://wordpress.org/plugins/custom-post-type-auto-menu/">
+				<?php esc_html_e( 'Custom Post Type Auto Menu', 'bfp-cpt-auto-menu' ); ?></a>
+			<?php esc_html_e( 'version', 'bfp-cpt-auto-menu' );
+			echo ' ' . $this->version; ?>
+			<?php esc_html_e( 'by', 'bfp-cpt-auto-menu' ); ?>
+            <a href="http://badfunproductions.com" target="_blank">Bad Fun Productions</a> -
+            <a href="https://wordpress.org/support/plugin/custom-post-type-auto-menu/"
+               target="_blank"><?php esc_html_e( 'Support', 'bfp-cpt-auto-menu' ); ?></a></p>
+    </div>
 </div>
