@@ -82,7 +82,6 @@ if ( ! class_exists( 'Plugin' ) ) {
 			if ( $this->loaded ) {
 				return;
 			}
-
 			$this->loaded = true;
 		}
 
@@ -154,7 +153,7 @@ if ( ! class_exists( 'Plugin' ) ) {
 		 */
 		public function enqueue_admin_js() {
 
-			wp_enqueue_script( $this->plugin_slug . '-admin-script', plugins_url( 'js/admin.js', dirname( __FILE__ ) ), [
+			wp_enqueue_script( $this->plugin_slug . '-admin-script', plugins_url( 'assets/js/admin.js', dirname( __FILE__ ) ), [
 				'jquery',
 				'wp-element',
 				'wp-components'
@@ -207,11 +206,9 @@ if ( ! class_exists( 'Plugin' ) ) {
 		 *
 		 */
 		public function load_admin_css() {
-			wp_enqueue_style( 'cpt-auto-menu-style', plugins_url( 'css/cpt-auto-menu.css', dirname( __FILE__ ) ), [ 'wp-components' ], $this->version );
+			wp_enqueue_style( 'cpt-auto-menu-style', plugins_url( 'assets/css/cpt-auto-menu.css', dirname( __FILE__ ) ), [ 'wp-components' ], $this->version );
 		}
-
 	}
-
 }
 
 

@@ -44,7 +44,7 @@ if( ! class_exists('Settings_Page')){
 		 *
 		 */
 		private function admin_register_css() {
-			wp_register_style( 'cpt-auto-menu-style', plugins_url( 'css/cpt-auto-menu.css', __FILE__ ) );
+			wp_register_style( 'cpt-auto-menu-style', plugins_url( 'assets/css/cpt-auto-menu.css', __FILE__ ) );
 		}
 
 		/**
@@ -229,7 +229,7 @@ if( ! class_exists('Settings_Page')){
 		 *
 		 * @return array|mixed|void
 		 */
-		private function get_selected_cpts() {
+		public function get_selected_cpts() {
 			if ( get_option( 'cpt_auto_menu_cpt_list' ) ) {
 				$this->cpt_list = get_option( 'cpt_auto_menu_cpt_list' );
 			} else {
@@ -307,9 +307,6 @@ if( ! class_exists('Settings_Page')){
 				'settings_field_select_menus'
 			), 'select_menu_settings', 'select_menu_section', array()
 			);
-
-			// add our registered stylesheet
-//			$this->admin_register_css();
 		}
 
 		/**

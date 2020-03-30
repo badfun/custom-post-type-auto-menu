@@ -27,13 +27,14 @@
 
 		<?php
 		// if custom post type has been chosen display menu tab
-		//		if ( $this->get_selected_cpts() ) {
-		//			?>
+		$cpt = new \BFP\CptAutoMenu\Settings_Page();
+		if ( $cpt->get_selected_cpts() ) {
+			?>
 
-        <a href="?page=cpt_auto_menu&tab=select_menu"
-           class="nav-tab <?php echo $active_tab == 'select_menu' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Menu Settings', 'bfp-cpt-auto-menu' ); ?></a>
+            <a href="?page=cpt_auto_menu&tab=select_menu"
+               class="nav-tab <?php echo $active_tab == 'select_menu' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Menu Settings', 'bfp-cpt-auto-menu' ); ?></a>
 
-        <!--		--><?php //} ?>
+		<?php } ?>
     </h2>
 
     <form method="post" action="options.php">
@@ -53,12 +54,12 @@
 		<?php @submit_button( __( 'Save Settings', 'bfp-cpt-auto-menu' ) ); ?>
     </form>
 
-    <br />
-    <br />
-    <br />
-    <br />
+    <br/>
+    <br/>
+    <br/>
+    <br/>
 
-    <hr />
+    <hr/>
     <p><a target="_blank" href="http://wordpress.org/plugins/custom-post-type-auto-menu/">
 			<?php esc_html_e( 'Custom Post Type Auto Menu', 'bfp-cpt-auto-menu' ); ?></a>
 		<?php esc_html_e( 'version', 'bfp-cpt-auto-menu' );
