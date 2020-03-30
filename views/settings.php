@@ -13,7 +13,7 @@
 ?>
 <div class="cpt-auto-menu-wrapper">
 
-	<h2><?php esc_html_e( 'Custom Post Type Auto Menu', 'bfp-cpt-auto-menu' ); ?></h2>
+    <h2><?php esc_html_e( 'Custom Post Type Auto Menu', 'bfp-cpt-auto-menu' ); ?></h2>
 
 	<?php settings_errors(); ?>
 
@@ -21,22 +21,22 @@
 	$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'cpt_auto_menu_select_cpt';
 	?>
 
-	<h2 class="nav-tab-wrapper">
-		<a href="?page=cpt_auto_menu&tab=select_cpt"
-		   class="nav-tab <?php echo $active_tab == 'select_cpt' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'CPT Settings', 'bfp-cpt-auto-menu' ); ?></a>
+    <h2 class="nav-tab-wrapper">
+        <a href="?page=cpt_auto_menu&tab=select_cpt"
+           class="nav-tab <?php echo $active_tab == 'select_cpt' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'CPT Settings', 'bfp-cpt-auto-menu' ); ?></a>
 
 		<?php
 		// if custom post type has been chosen display menu tab
-		if ( $this->get_selected_cpts() ) {
-			?>
+		//		if ( $this->get_selected_cpts() ) {
+		//			?>
 
-			<a href="?page=cpt_auto_menu&tab=select_menu"
-			   class="nav-tab <?php echo $active_tab == 'select_menu' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Menu Settings', 'bfp-cpt-auto-menu' ); ?></a>
+        <a href="?page=cpt_auto_menu&tab=select_menu"
+           class="nav-tab <?php echo $active_tab == 'select_menu' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Menu Settings', 'bfp-cpt-auto-menu' ); ?></a>
 
-		<?php } ?>
-	</h2>
+        <!--		--><?php //} ?>
+    </h2>
 
-	<form method="post" action="options.php">
+    <form method="post" action="options.php">
 
 		<?php
 		if ( $active_tab == 'select_cpt' ) {
@@ -51,20 +51,20 @@
 		?>
 
 		<?php @submit_button( __( 'Save Settings', 'bfp-cpt-auto-menu' ) ); ?>
-	</form>
+    </form>
 
-	<br />
-	<br />
-	<br />
-	<br />
+    <br />
+    <br />
+    <br />
+    <br />
 
-	<hr />
-	<p><a target="_blank" href="http://wordpress.org/plugins/custom-post-type-auto-menu/">
+    <hr />
+    <p><a target="_blank" href="http://wordpress.org/plugins/custom-post-type-auto-menu/">
 			<?php esc_html_e( 'Custom Post Type Auto Menu', 'bfp-cpt-auto-menu' ); ?></a>
 		<?php esc_html_e( 'version', 'bfp-cpt-auto-menu' );
 		echo ' ' . $this->version; ?>
 		<?php esc_html_e( 'by', 'bfp-cpt-auto-menu' ); ?>
-		<a href="http://badfunproductions.com" target="_blank">Bad Fun Productions</a> -
-		<a href="https://github.com/badfun/custom-post-type-auto-menu"
-		   target="_blank"><?php esc_html_e( 'Please Report Bugs', 'bfp-cpt-auto-menu' ); ?></a></p>
+        <a href="http://badfunproductions.com" target="_blank">Bad Fun Productions</a> -
+        <a href="https://wordpress.org/support/plugin/custom-post-type-auto-menu/"
+           target="_blank"><?php esc_html_e( 'Support', 'bfp-cpt-auto-menu' ); ?></a></p>
 </div>

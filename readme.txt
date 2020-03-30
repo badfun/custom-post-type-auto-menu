@@ -3,8 +3,8 @@ Contributors: badfun
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=UYCUSEFX8Q89C
 Tags: custom post type, menus, auto menu
 Requires at least: 3.0.1
-Tested up to: 5.2
-Stable tag: 1.2.3
+Tested up to: 5.4
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,6 +19,9 @@ for sites that have a large number of custom post type additions, such as produc
 
 The plugin supports multiple custom post types.
 
+== Requirements ==
+ * The custom post type you wish to use must be have both 'public' and 'show_in_nav_menus' set to true.
+ * Your theme must have menus.
 
 == Installation ==
 
@@ -27,14 +30,13 @@ The plugin supports multiple custom post types.
 3. Use checkbox to select which Custom Post Types you want an automated menu for, then Save Changes.
 4. You will be redirected to Menu Settings tab. Select which menu and which parent menu item where you wish the CPT to display.
 
-
 == Frequently Asked Questions ==
 
 = How many custom post types can I use? =
 The plugin now supports multiple custom post types. Use as many as you like.
 
 = Can I create sub-sub menu items? =
-Yes. Well no. It requires a mod to the code and can lead to strange issues. I'll figure it out for future versions.
+Currently the plugin works for top-level menu items only.
 
 = What about categories and pages? =
 There are other available solutions for that, but if there is demand I could incorporate it in future releases.
@@ -54,8 +56,10 @@ to a menu.
 2. Menu Settings page. Choose which menu and which menu item the automated cpt post should appear in.
 
 == Changelog ==
-= 1.2.3 =
-* tested with WP 5.2
+= 1.3.0 =
+* tested up to WP 5.4
+* refactored the codebase and reorganized the directories
+* fixed get_terms to new requirement according to the Codex
 
 = 1.2.2 =
 * tested with WP 5.0

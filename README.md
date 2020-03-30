@@ -1,3 +1,6 @@
+[![WP compatibility](https://plugintests.com/plugins/custom-post-type-auto-menu/wp-badge.svg)](https://plugintests.com/plugins/custom-post-type-auto-menu/latest)
+[![PHP compatibility](https://plugintests.com/plugins/custom-post-type-auto-menu/php-badge.svg)](https://plugintests.com/plugins/custom-post-type-auto-menu/latest)
+
 #Custom Post Type Auto Menu
 =============
 
@@ -9,6 +12,9 @@ for sites that have a large number of custom post type additions, such as produc
 
 The plugin is also available in the WordPress plugin repository: http://wordpress.org/plugins/custom-post-type-auto-menu/
 
+## Requirements
+ * The custom post type you wish to use must be have both 'public' and 'show_in_nav_menus' set to true.
+ * Your theme must have menus.
 
 ## Installation
 
@@ -24,7 +30,7 @@ The plugin is also available in the WordPress plugin repository: http://wordpres
 The plugin now supports multiple custom post types. Use as many as you like.
 
 2. Can I create sub-sub menu items?
-Yes. Well no. It requires a mod to the code and can lead to strange issues. I'll figure it out for future versions.
+Currently the plugin works for top-level menu items only
 
 3. What about categories and pages?
 There are other available solutions for that, but if there is demand I could incorporate it in future releases.
@@ -48,8 +54,10 @@ to a menu.
 
 
 ## Changelog
-= 1.2.3 =
-* tested with WP 5.2
+= 1.3.0 =
+* tested up to WP 5.4
+* refactored the codebase and reorganized the directories
+* fixed get_terms to new requirement according to the Codex
 
 = 1.2.2 =
 * tested with WP 5.0
