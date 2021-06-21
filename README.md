@@ -1,7 +1,7 @@
 [![WP compatibility](https://plugintests.com/plugins/custom-post-type-auto-menu/wp-badge.svg)](https://plugintests.com/plugins/custom-post-type-auto-menu/latest)
 [![PHP compatibility](https://plugintests.com/plugins/custom-post-type-auto-menu/php-badge.svg)](https://plugintests.com/plugins/custom-post-type-auto-menu/latest)
 
-#Custom Post Type Auto Menu
+Custom Post Type Auto Menu
 =============
 
 A WordPress plugin that automatically adds new custom post type posts to the chosen menu and parent item as a sub-menu item.
