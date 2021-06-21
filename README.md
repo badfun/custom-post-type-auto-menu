@@ -54,6 +54,9 @@ to a menu.
 
 
 ## Changelog
+= 1.3.1 =
+* tested up to WP 5.7
+
 = 1.3.0 =
 * tested up to WP 5.4
 * refactored the codebase and reorganized the directories

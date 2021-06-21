@@ -3,8 +3,8 @@ Contributors: badfun
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=UYCUSEFX8Q89C
 Tags: custom post type, menus, auto menu
 Requires at least: 3.0.1
-Tested up to: 5.4
-Stable tag: 1.3.0
+Tested up to: 5.7
+Stable tag: 1.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,9 @@ to a menu.
 2. Menu Settings page. Choose which menu and which menu item the automated cpt post should appear in.
 
 == Changelog ==
+= 1.3.1 =
+* tested up to WP 5.7
+
 = 1.3.0 =
 * tested up to WP 5.4
 * refactored the codebase and reorganized the directories

@@ -6,7 +6,7 @@
  * @author  Bad Fun Productions
  * @license GPL-3.0
  * @link https://badfunproductions.com
- * @copyright 2020 Bad Fun Productions
+ * @copyright 2021 Bad Fun Productions
  */
 
 namespace BFP\CptAutoMenu;

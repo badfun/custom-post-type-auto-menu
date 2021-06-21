@@ -6,13 +6,13 @@
  * @author  Bad Fun Productions
  * @license GPL-3.0
  * @link https://badfunproductions.com
- * @copyright 2020 Bad Fun Productions
+ * @copyright 2021 Bad Fun Productions
  *
  * @wordpress-plugin
  * Plugin Name: Custom Post Type Auto Menu
  * Plugin URI: https://github.com/badfun/custom-post-type-auto-menu
  * Description: Automatically adds new custom post type posts to the chosen menu and parent item as a sub-menu item.
- * Version: 1.3.0
+ * Version: 1.3.1
  * Author: Bad Fun Productions
  * Author URI: http://badfunproductions.com
  * Author Email: info@badfunproductions.com
