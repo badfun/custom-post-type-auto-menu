@@ -54,6 +54,10 @@ to a menu.
 
 
 ## Changelog
+
+= 1.3.2 =
+* tested up to WP 6.0
+
 = 1.3.1 =
 * tested up to WP 5.7
 
